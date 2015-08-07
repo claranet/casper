@@ -109,9 +109,9 @@ def list_deployments(cmd, config):
     handle_response_status_code(result)
     dhs = result.json().get('_items', [])
 
-    x = PrettyTable(["Deploy ID", "Timestamp", "Application", "Module", "Commit", "Last commit message"])
+    x = PrettyTable(["Deploy ID", "Timestamp", "Application", "Module", "Revision", "Commit", "Last commit message"])
     for dh in dhs:
-        x.add_row([dh.get('_id'), dh.get('timestamp'), dh.get('app_id'), dh.get('module'), dh.get('commit'), ansi_escape(dh.get('commit_message', ''))[:32]])
+        x.add_row([dh.get('_id'), dh.get('timestamp'), dh.get('app_id'), dh.get('module'), dh.get('revision', ''), dh.get('commit'), ansi_escape(dh.get('commit_message', ''))[:32]])
     print(x)
 
 def list_modules(cmd, config):
