@@ -3,12 +3,17 @@ import ConfigParser, os
 from prettytable import PrettyTable
 import requests
 import json
+import re
 
 login = ""
 password = ""
 endpoint = ""
 
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+
+ansi_regex = re.compile(r'\x1b[^m]*m')
+def ansi_escape(string):
+    return ansi_regex.sub('', string)
 
 def load_conf():
     config = ConfigParser.ConfigParser()
@@ -104,9 +109,9 @@ def list_deployments(cmd, config):
     handle_response_status_code(result)
     dhs = result.json().get('_items', [])
 
-    x = PrettyTable(["Deploy ID", "Timestamp", "Application", "Module", "Commit"])
+    x = PrettyTable(["Deploy ID", "Timestamp", "Application", "Module", "Commit", "Last commit message"])
     for dh in dhs:
-        x.add_row([dh.get('_id'), dh.get('timestamp'), dh.get('app_id'), dh.get('module'), dh.get('commit')])
+        x.add_row([dh.get('_id'), dh.get('timestamp'), dh.get('app_id'), dh.get('module'), dh.get('commit'), ansi_escape(dh.get('commit_message', ''))[:32]])
     print(x)
 
 def list_modules(cmd, config):
