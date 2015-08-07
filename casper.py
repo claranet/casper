@@ -41,9 +41,9 @@ def parse_cmdline():
     parser_list_jobs = subparsers.add_parser('list-jobs', help='list jobs')
     parser_list_jobs.add_argument('--app_id')
 
-    parser_deploy_histories = subparsers.add_parser('list-deploy-histories', help='list deploy histories')
-    parser_deploy_histories.add_argument('--app_id', required=True)
-    parser_deploy_histories.add_argument('--module_name', required=True)
+    parser_deployments = subparsers.add_parser('list-deployments', help='list deployments')
+    parser_deployments.add_argument('--app_id', required=True)
+    parser_deployments.add_argument('--module_name', required=True)
 
     parser_deploy = subparsers.add_parser('deploy', help='deploy module')
     parser_deploy.add_argument('--app_id', required=True)
@@ -96,9 +96,9 @@ def list_jobs(cmd, config):
         x.add_row([job.get('command'), job.get('app_id'), job.get('_created'), job.get('status'), module_str])
     print(x)
 
-def list_deploy_histories(cmd, config):
-    print("Listing deploy histories...")
-    url = config.get('Default', 'endpoint') + '/deploy_histories?max_results=20&sort=-timestamp&where={"app_id":"' + cmd.app_id + '","module":"'+ cmd.module_name + '"}'
+def list_deployments(cmd, config):
+    print("Listing deployments...")
+    url = config.get('Default', 'endpoint') + '/deployments?max_results=20&sort=-timestamp&where={"app_id":"' + cmd.app_id + '","module":"'+ cmd.module_name + '"}'
     print('URL: {0}'.format(url))
     result = requests.get(url, headers=headers, auth=(config.get('Default', 'login'), config.get('Default', 'password')))
     handle_response_status_code(result)
@@ -137,7 +137,7 @@ def rollback(cmd, config):
 def execute_action(cmd, config):
     actions = { 'list-apps': list_apps, 'list-jobs': list_jobs, 
             'list-modules': list_modules, 'deploy': deploy, 'rollback': rollback,
-            'list-deploy-histories': list_deploy_histories }
+            'list-deployments': list_deployments }
     actions[cmd.action](cmd, config)
 
 
