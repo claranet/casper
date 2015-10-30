@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 import argparse
 import ConfigParser, os
 from prettytable import PrettyTable
@@ -7,6 +8,7 @@ import json
 import re
 import sys
 import getpass
+import xlsxwriter
 
 login = ""
 password = ""
@@ -16,6 +18,29 @@ filename = '~/.casper'
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
 ansi_regex = re.compile(r'\x1b[^m]*m')
+
+
+#Build Workbook and format
+workbname = 'ghost_apps.xlsx'
+workbook = xlsxwriter.Workbook(workbname)
+bold = workbook.add_format({'bold': True})
+
+#Build Worksheet 1
+wsheet1 = 'Ghost_APPS'
+worksheet = workbook.add_worksheet(wsheet1)
+
+# Worksheet format
+format = workbook.add_format()
+format.set_text_wrap()
+center = workbook.add_format()
+center.set_align('center')
+center.set_align('vcenter')
+worksheet.write(0, 0, "ID", bold)
+worksheet.write(0, 1, "Name", bold)
+worksheet.write(0, 2, "Role", bold)
+worksheet.write(0, 3, "Environnement", bold)
+worksheet.write(0, 4, "Modules", bold)
+
 def ansi_escape(string):
     return ansi_regex.sub('', string)
 
@@ -92,6 +117,7 @@ def parse_cmdline():
     subparsers = parser.add_subparsers(dest='action', help='actions help')
 
     parser_list_apps = subparsers.add_parser('list-apps', help='list applications')
+    parser_export_apps = subparsers.add_parser('export-apps', help='exports applications as xlsx')
 
     parser_list_modules = subparsers.add_parser('list-modules', help='list modules')
     parser_list_modules.add_argument('--app_id', required=True)
@@ -135,7 +161,33 @@ def list_apps(cmd, config):
             mod_array.append(module.get('name'))
         modules = modules_str.join(mod_array)
         x.add_row([app.get('_id'), app.get('name'), app.get('role'), app.get('env'), modules])
+        x.align['Modules'] = "l"
+        x.sortby = 'Environment'
     print(x)
+
+def export_apps(cmd, config):
+    cell = 1 # init cell counter
+
+    print('Exporting applications...')
+    url = config.get('Default', 'endpoint') + '/apps' + '?sort=-_updated'
+    print('URL: {0}'.format(url))
+    result = requests.get(url, headers=headers, auth=(config.get('Default', 'login'), config.get('Default', 'password')))
+    handle_response_status_code(result)
+    apps = result.json().get('_items', [])
+    for app in apps:
+        modules_str = ","
+        mod_array = []
+        for module in app.get('modules'):
+            mod_array.append(module.get('name'))
+        modules = modules_str.join(mod_array)
+        worksheet.write(cell, 0, app.get('_id')) # build cell content 
+        worksheet.write(cell, 1, app.get('name')) #
+        worksheet.write(cell, 2, app.get('role')) #
+        worksheet.write(cell, 3, app.get('env')) #
+        worksheet.write(cell, 4, "\n".join(modules.split(',')), format) #
+        cell += 1 # increment cell counter
+    worksheet.autofilter(0, 0, cell, 4) # filter by ID
+    workbook.close() # close xlsx file
 
 def list_jobs(cmd, config):
     print('Listing jobs...')
@@ -195,7 +247,7 @@ def rollback(cmd, config):
 def execute_action(cmd, config):
     actions = { 'list-apps': list_apps, 'list-jobs': list_jobs, 
             'list-modules': list_modules, 'deploy': deploy, 'rollback': rollback,
-            'list-deployments': list_deployments }
+            'list-deployments': list_deployments, 'export-apps': export_apps }
     actions[cmd.action](cmd, config)
 
 if __name__ == '__main__':
