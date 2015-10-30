@@ -3,3 +3,4 @@
 # Don't pin them unless you want them pinned, of course.
 prettytable
 requests
+XlsxWriter
