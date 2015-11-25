@@ -20,27 +20,6 @@ headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 ansi_regex = re.compile(r'\x1b[^m]*m')
 
 
-#Build Workbook and format
-workbname = 'ghost_apps.xlsx'
-workbook = xlsxwriter.Workbook(workbname)
-bold = workbook.add_format({'bold': True})
-
-#Build Worksheet 1
-wsheet1 = 'Ghost_APPS'
-worksheet = workbook.add_worksheet(wsheet1)
-
-# Worksheet format
-format = workbook.add_format()
-format.set_text_wrap()
-center = workbook.add_format()
-center.set_align('center')
-center.set_align('vcenter')
-worksheet.write(0, 0, "ID", bold)
-worksheet.write(0, 1, "Name", bold)
-worksheet.write(0, 2, "Role", bold)
-worksheet.write(0, 3, "Environnement", bold)
-worksheet.write(0, 4, "Modules", bold)
-
 def ansi_escape(string):
     return ansi_regex.sub('', string)
 
@@ -165,7 +144,28 @@ def list_apps(cmd, config):
         x.sortby = 'Environment'
     print(x)
 
-def export_apps(cmd, config):
+def export_apps(cmd, config):    
+    #Build Workbook and format
+    workbname = 'ghost_apps.xlsx'
+    workbook = xlsxwriter.Workbook(workbname)
+    bold = workbook.add_format({'bold': True})
+
+    #Build Worksheet 1
+    wsheet1 = 'Ghost_APPS'
+    worksheet = workbook.add_worksheet(wsheet1)
+
+    # Worksheet format
+    format = workbook.add_format()
+    format.set_text_wrap()
+    center = workbook.add_format()
+    center.set_align('center')
+    center.set_align('vcenter')
+    worksheet.write(0, 0, "ID", bold)
+    worksheet.write(0, 1, "Name", bold)
+    worksheet.write(0, 2, "Role", bold)
+    worksheet.write(0, 3, "Environnement", bold)
+    worksheet.write(0, 4, "Modules", bold)
+
     cell = 1 # init cell counter
 
     print('Exporting applications...')
