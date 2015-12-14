@@ -1,2 +1,2 @@
-prettytable
-requests
+prettytable==0.7.2
+requests==2.5.3
