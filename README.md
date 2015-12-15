@@ -8,23 +8,31 @@ Casper is a command line tool that interacts with Ghost API
     password=<yourpassword>
 
 2) Install dependencies:
-
+    
+    git clone casper 
+    cd casper
+    virtualenv casper_env
+    source casper_env/bin/activate
     pip install -r requirements.txt
+    deactivate
 
 3) Launch:
 
-    python casper.py -h
-    usage: casper.py [-h] [--configure] [--debug]
-                 {list-apps,list-modules,list-jobs,deploy,rollback} ...
+    usage: casper.py [-h] [--configure] [--debug] [--login LOGIN]
+                     [--password PASSWORD] [--endpoint ENDPOINT]
+                     
+                     {list-apps,list-modules,list-jobs,list-deployments,deploy,rollback}
+                     ...
     
     Casper command line
     
     positional arguments:
-      {list-apps,list-modules,list-jobs,deploy,rollback}
+      {list-apps,list-modules,list-jobs,list-deployments,deploy,rollback}
                             actions help
         list-apps           list applications
         list-modules        list modules
         list-jobs           list jobs
+        list-deployments    list deployments
         deploy              deploy module
         rollback            rollback module
     
@@ -32,3 +40,6 @@ Casper is a command line tool that interacts with Ghost API
       -h, --help            show this help message and exit
       --configure
       --debug
+      --login LOGIN
+      --password PASSWORD
+      --endpoint ENDPOINT
