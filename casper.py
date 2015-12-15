@@ -91,6 +91,9 @@ def parse_cmdline():
 
     parser.add_argument('--configure', action='store_true')
     parser.add_argument('--debug', action='store_true')
+    parser.add_argument('--login')
+    parser.add_argument('--password')
+    parser.add_argument('--endpoint')
 
     subparsers = parser.add_subparsers(dest='action', help='actions help')
 
@@ -110,9 +113,6 @@ def parse_cmdline():
     parser_deploy.add_argument('--app_id', required=True)
     parser_deploy.add_argument('--module_name', required=True)
     parser_deploy.add_argument('--revision')
-    parser_deploy.add_argument('--login')
-    parser_deploy.add_argument('--password')
-    parser_deploy.add_argument('--endpoint')
 
     parser_rollback = subparsers.add_parser('rollback', help='rollback module')
     parser_rollback.add_argument('--app_id', required=True)
@@ -127,9 +127,9 @@ def handle_response_status_code(result):
 
 def list_apps(cmd, config):
     print('Listing applications...')
-    url = config.get('Default', 'endpoint') + '/apps' + '?sort=-_updated'
+    url = get_endpoint(cmd, config) + '/apps' + '?sort=-_updated'
     print('URL: {0}'.format(url))
-    result = requests.get(url, headers=headers, auth=(config.get('Default', 'login'), config.get('Default', 'password')))
+    result = requests.get(url, headers=headers, auth=(get_login(cmd, config), get_password(cmd, config)))
     handle_response_status_code(result)
     apps = result.json().get('_items', [])
 
@@ -145,9 +145,9 @@ def list_apps(cmd, config):
 
 def list_jobs(cmd, config):
     print('Listing jobs...')
-    url = config.get('Default', 'endpoint') + '/jobs' + '?max_results=50' + '&sort=-_updated'
+    url = get_endpoint(cmd, config) + '/jobs' + '?max_results=50' + '&sort=-_updated'
     print('URL: {0}'.format(url))
-    result = requests.get(url, headers=headers, auth=(config.get('Default', 'login'), config.get('Default', 'password')))
+    result = requests.get(url, headers=headers, auth=(get_login(cmd, config), get_password(cmd, config)))
     handle_response_status_code(result)
     jobs = result.json().get('_items', [])
 
@@ -162,9 +162,9 @@ def list_jobs(cmd, config):
 
 def list_deployments(cmd, config):
     print("Listing deployments...")
-    url = config.get('Default', 'endpoint') + '/deployments?max_results=20&sort=-timestamp&where={"app_id":"' + cmd.app_id + '","module":"'+ cmd.module_name + '"}'
+    url = get_endpoint(cmd, config) + '/deployments?max_results=20&sort=-timestamp&where={"app_id":"' + cmd.app_id + '","module":"'+ cmd.module_name + '"}'
     print('URL: {0}'.format(url))
-    result = requests.get(url, headers=headers, auth=(config.get('Default', 'login'), config.get('Default', 'password')))
+    result = requests.get(url, headers=headers, auth=(get_login(cmd, config), get_password(cmd, config)))
     handle_response_status_code(result)
     dhs = result.json().get('_items', [])
 
@@ -189,12 +189,12 @@ def deploy(cmd, config):
 
 def rollback(cmd, config):
     print('Rollbacking to deployment_id: {0}'.format(cmd.deployment_id))
-    url = config.get('Default', 'endpoint') + '/jobs' 
+    url = get_endpoint(cmd, config) + '/jobs' 
     job = {}
     job['app_id'] = cmd.app_id
     job['command'] = 'rollback'
     job['options'] = [cmd.deployment_id]
-    result = requests.post(url, data=json.dumps(job), headers=headers, auth=(config.get('Default', 'login'), config.get('Default', 'password')))
+    result = requests.post(url, data=json.dumps(job), headers=headers, auth=(get_login(cmd, config), get_password(cmd, config)))
     handle_response_status_code(result)
     print(result.text)	
 
