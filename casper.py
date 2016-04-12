@@ -19,13 +19,6 @@ ansi_regex = re.compile(r'\x1b[^m]*m')
 def ansi_escape(string):
     return ansi_regex.sub('', string)
 
-#def dump(obj):
-#    print('{')
-#    for attr in dir(obj):
-#        if hasattr( obj, attr ):
-#           print( "  %s :\t%s" % (attr, getattr(obj, attr)))
-#    print('}')
-
 def load_conf(cmd):
     config = ConfigParser.ConfigParser()
     if config.read([os.path.expanduser(filename)]) is "":
