@@ -1,4 +1,4 @@
-#!casper_env/bin/python
+#!/usr/bin/env python
 import argparse
 import ConfigParser, os
 from prettytable import PrettyTable
