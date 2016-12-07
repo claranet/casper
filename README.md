@@ -34,6 +34,7 @@ Casper is a command line tool that interacts with Ghost API
         list-modules        list modules
         list-jobs           list jobs
         list-deployments    list deployments
+        buildimage          buildimage
         deploy              deploy module
         rollback            rollback module
     

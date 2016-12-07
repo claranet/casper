@@ -113,6 +113,10 @@ def parse_cmdline():
     parser_deploy.add_argument('--module_name', required=True)
     parser_deploy.add_argument('--revision')
 
+    parser_deploy = subparsers.add_parser('buildimage', help='buildimage')
+    parser_deploy.add_argument('--app_id', required=True)
+    parser_deploy.add_argument('--instance_type', required=True)
+
     parser_rollback = subparsers.add_parser('rollback', help='rollback module')
     parser_rollback.add_argument('--app_id', required=True)
     parser_rollback.add_argument('--deployment_id', required=True)
@@ -233,6 +237,17 @@ def deploy(cmd, config):
     handle_response_status_code(result)
     print(result.text)
 
+def buildimage(cmd, config):
+    print("Launching Buildimage for app_id: {0}...".format(cmd.app_id, cmd.instance_type))
+    url = get_endpoint(cmd, config) + '/jobs'
+    job = {}
+    job['command'] = 'buildimage'
+    job['app_id'] = cmd.app_id
+    job['instance_type'] = cmd.instance_type
+    result = requests.post(url, data=json.dumps(job), headers=headers, auth=(get_login(cmd, config), get_password(cmd, config)))
+    handle_response_status_code(result)
+    print(result.text)
+
 def rollback(cmd, config):
     print('Rollbacking to deployment_id: {0}'.format(cmd.deployment_id))
     url = get_endpoint(cmd, config) + '/jobs' 
@@ -246,7 +261,7 @@ def rollback(cmd, config):
 
 def execute_action(cmd, config):
     actions = { 'list-apps': list_apps, 'list-jobs': list_jobs, 
-            'list-modules': list_modules, 'deploy': deploy, 'rollback': rollback,
+            'list-modules': list_modules, 'deploy': deploy, 'buildimage': buildimage, 'rollback': rollback,
             'list-deployments': list_deployments, 'export-apps': export_apps }
     actions[cmd.action](cmd, config)
 
