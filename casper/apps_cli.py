@@ -1,4 +1,5 @@
 import click
+import yaml
 from click import ClickException
 from tabulate import tabulate
 
@@ -36,3 +37,15 @@ def apps_list(context, nb, page):
          ] for app in apps],
         headers=['ID', 'Name', 'Environment', 'Role', 'Color']
     ))
+
+
+@apps.command('show')
+@click.argument('application-id')
+@context
+def app_show(context, application_id):
+    try:
+        app = context.apps.retrieve(application_id)
+    except ApiClientException as e:
+        raise ClickException(e) from e
+
+    click.echo(yaml.safe_dump(app, indent=4, allow_unicode=True, default_flow_style=False))

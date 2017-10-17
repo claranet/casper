@@ -2,6 +2,7 @@ from datetime import datetime
 
 import click
 import pytz
+import yaml
 from click import ClickException
 from tabulate import tabulate
 
@@ -40,3 +41,15 @@ def deployments_list(context, nb, page):
          ] for dep in deployments],
         headers=['ID', 'Job ID', 'Application name', 'Module', 'Commit', 'User', 'Date']
     ))
+
+
+@deployments.command('show')
+@click.argument('deployment-id')
+@context
+def deployment_show(context, deployment_id):
+    try:
+        app = context.deployments.retrieve(deployment_id)
+    except ApiClientException as e:
+        raise ClickException(e) from e
+
+    click.echo(yaml.safe_dump(app, indent=4, allow_unicode=True, default_flow_style=False))
