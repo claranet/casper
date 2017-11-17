@@ -1,47 +1,46 @@
-Casper is a command line tool that interacts with Ghost API
------------------------------------------------------------
-1) Setup credential file: ~/.casper
+Casper
+======
 
-    [Default]
-    endpoint=https://<client>.ghost.morea.fr
-    login=<yourlogin>
-    password=<yourpassword>
+Casper is a command line tool that interacts with Cloud Deploy (Ghost project).
 
-2) Install dependencies:
-    
-    git clone casper 
-    cd casper
-    virtualenv casper_env
-    source casper_env/bin/activate
-    pip install -r requirements.txt
-    deactivate
+Cloud Deploy documentation is available here : [https://docs.cloudeploy.io](https://docs.cloudeploy.io)
 
-3) Launch:
+Installation
+------------
+With [pip](https://pip.pypa.io) (in a [virtualenv](https://virtualenv.pypa.io) or not)
 
-    usage: casper.py [-h] [--configure] [--debug] [--login LOGIN]
-                     [--password PASSWORD] [--endpoint ENDPOINT]
-                     
-                     {list-apps,list-modules,list-jobs,list-deployments,deploy,rollback}
-                     ...
-    
-    Casper command line
-    
-    positional arguments:
-      {list-apps,list-modules,list-jobs,list-deployments,deploy,rollback}
-                            actions help
-        list-apps           list applications
-        export-apps         export applications as xlsx file
-        list-modules        list modules
-        list-jobs           list jobs
-        list-deployments    list deployments
-        buildimage          buildimage
-        deploy              deploy module
-        rollback            rollback module
-    
-    optional arguments:
-      -h, --help            show this help message and exit
-      --configure
-      --debug
-      --login LOGIN
-      --password PASSWORD
-      --endpoint ENDPOINT
+```
+pip install git+ssh://bitbucket.org/morea/casper
+```
+
+Usage
+-----
+Usage documentation is embedded in command.
+```
+casper --help
+```
+
+Configuration
+-------------
+Location and credentials to access the Cloud Deploy instance are prompted if needed.
+
+Configuration details can also be specified in a `.casper` configuration file.
+The command will look for this file in the current directory and the user home directory, in this order.
+Also, the configuration file can be specified with the `--config-file` option.
+
+The configuration file can contain many profiles, the default one is named `default` and is mandatory. The profile can be chosen with the `--profile` option.
+
+Here is an example of a configuration file :
+
+```
+[default]
+endpoint=https://my_instance.cloudeploy.io
+username=casper
+
+[customer_x]
+endpoint=https://customer-x.cloudeploy.io
+username=casper
+password=XXXXXX
+```
+
+Any missing information for a profile will be prompted.
