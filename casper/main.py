@@ -60,17 +60,41 @@ context = click.make_pass_decorator(Context, ensure=True)
 
 class NamedGroups(Group):
     # TODO implement dynamic command fetching here instead of __init__ file
-    # TODO split objects management and commands in help
-    pass
+
+    def format_commands(self, ctx, formatter):
+        """Extra format methods for multi methods that adds all the commands
+        after the options.
+        """
+        cmd_rows = []
+        group_rows = []
+        for subcommand in self.list_commands(ctx):
+            cmd = self.get_command(ctx, subcommand)
+            # What is this, the tool lied about a command.  Ignore it
+            if cmd is None:
+                continue
+
+            help = cmd.short_help or ''
+            if hasattr(cmd, 'commands'):
+                group_rows.append((subcommand, help))
+            else:
+                cmd_rows.append((subcommand, help))
+
+        if group_rows:
+            with formatter.section('Management Commands'):
+                formatter.write_dl(group_rows)
+        if cmd_rows:
+            with formatter.section('Commands'):
+                formatter.write_dl(cmd_rows)
 
 
 CONFIG_FILE_PATHS = (os.path.expanduser('~/.casper'), os.path.join(os.getcwd(), '.casper'))
 
 
 @click.command(cls=NamedGroups)
-@click.option('--verbose', is_flag=True)
-@click.option('--profile', default="default")
-@click.option('--config-file', type=click.Path(exists=True))
+@click.option('--verbose', is_flag=True, help="More verbose output")
+@click.option('--profile', default="default", help="Profile name to use from config file")
+@click.option('--config-file', type=click.Path(exists=True),
+              help='Location of config file to use (defaults ".casper" and "{}/.casper")'.format(os.path.expanduser("~")))
 @context
 def cli(context, verbose, profile, config_file):
     context.verbose = verbose

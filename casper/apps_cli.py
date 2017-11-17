@@ -7,14 +7,14 @@ from casper.ghost_api_client import ApiClientException
 from casper.main import cli, context
 
 
-@cli.group('app')
+@cli.group('app', help="Manage applications")
 def apps():
     pass
 
 
-@apps.command('ls')
-@click.option('--nb', default=10)
-@click.option('--page', default=1)
+@apps.command('ls', help="List the applications")
+@click.option('--nb', default=10, help="Number of applications to fetch (default 10)")
+@click.option('--page', default=1, help="Page to fetch (default 1)")
 @context
 def apps_list(context, nb, page):
     try:
@@ -39,7 +39,8 @@ def apps_list(context, nb, page):
     ))
 
 
-@apps.command('show')
+@apps.command('show', short_help="Show the details of an application",
+              help="Show the details of the application APPLICATION_ID")
 @click.argument('application-id')
 @context
 def app_show(context, application_id):

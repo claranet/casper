@@ -7,14 +7,14 @@ from casper.ghost_api_client import ApiClientException
 from casper.main import cli, context
 
 
-@cli.group('job')
+@cli.group('job', help="Manage jobs")
 def jobs():
     pass
 
 
-@jobs.command('ls')
-@click.option('--nb', default=10)
-@click.option('--page', default=1)
+@jobs.command('ls', help="List the jobs")
+@click.option('--nb', default=10, help="Number of jobs to fetch (default 10)")
+@click.option('--page', default=1, help="Page to fetch (default 1)")
 @context
 def jobs_list(context, nb, page):
     try:
@@ -35,7 +35,7 @@ def jobs_list(context, nb, page):
     ))
 
 
-@jobs.command('show')
+@jobs.command('show', short_help="Show the details of a job")
 @click.argument('job-id')
 @context
 def job_show(context, job_id):
