@@ -1,9 +1,10 @@
 import click
+import yaml
 from click import ClickException
 from tabulate import tabulate
 
 from casper.ghost_api_client import ApiClientException
-from .main import cli, context
+from casper.main import cli, context
 
 
 @cli.group('job')
@@ -32,3 +33,15 @@ def jobs_list(context, nb, page):
          ] for job in jobs],
         headers=['ID', 'Application name', 'Command', 'Status', 'User', 'Date']
     ))
+
+
+@jobs.command('show')
+@click.argument('job-id')
+@context
+def job_show(context, job_id):
+    try:
+        app = context.jobs.retrieve(job_id)
+    except ApiClientException as e:
+        raise ClickException(e) from e
+
+    click.echo(yaml.safe_dump(app, indent=4, allow_unicode=True, default_flow_style=False))

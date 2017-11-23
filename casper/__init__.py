@@ -4,4 +4,4 @@ from .main import cli
 from .apps_cli import apps
 from .jobs_cli import jobs
 from .deployments_cli import deployments
-from .commands_cli import deploy
+from .commands_cli import buildimage

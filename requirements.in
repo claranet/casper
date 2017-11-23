@@ -4,5 +4,6 @@
 click
 pip-tools
 pytz
+pyyaml
 requests
 tabulate
