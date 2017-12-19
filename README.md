@@ -44,3 +44,23 @@ password=XXXXXX
 ```
 
 Any missing information for a profile will be prompted.
+
+Enable autocompletion
+---------------------
+
+Bash user:
+
+```bash
+_CASPER_COMPLETE=source casper >> ~/.bash_completion
+```
+
+
+Zsh user :
+
+Put the following content to the following path ~/.zshrc
+
+```bash
+autoload bashcompinit
+bashcompinit
+eval "$(_CASPER_COMPLETE=source casper)"
+```
