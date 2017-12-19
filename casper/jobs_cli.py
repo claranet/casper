@@ -52,3 +52,21 @@ def job_show(context, job_id):
         raise ClickException(e) from e
 
     click.echo(yaml.safe_dump(app, indent=4, allow_unicode=True, default_flow_style=False))
+
+
+@jobs.command('log', help="Show the logs of a job")
+@click.argument('job-id')
+@click.option('--output', help="Path of downloaded log file", type=click.File('w'))
+@context
+def job_log(context, job_id, output):
+    try:
+        last_pos = 0
+        while True:
+            data = context.jobs.get_logs(job_id, last_pos)
+            last_pos = data['last_pos']
+            if output is not None:
+                output.write(data['data'])
+            click.echo(data['data'], nl=False)
+            time.sleep(0.5)
+    except ApiClientException as e:
+        raise ClickException(e) from e
