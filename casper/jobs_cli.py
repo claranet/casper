@@ -1,7 +1,6 @@
 import base64
 import click
 import yaml
-import json
 from click import ClickException
 from tabulate import tabulate
 from .utils import regex_validate
@@ -9,7 +8,7 @@ from .utils import regex_validate
 from pyghost.api_client import ApiClientException, JobCommands, JobStatuses
 from casper.main import cli, context
 
-from socketIO_client import SocketIO, LoggingNamespace
+from socketIO_client import SocketIO
 
 
 @cli.group('job', help="Manage jobs")
@@ -70,15 +69,14 @@ def job_log(context, job_id, output):
             output.write(decoded.decode('utf-8'))
     try:
         job = context.jobs.retrieve(job_id)
-
+        job['status'] = 'started'
         if job['status'] == 'started':
-            with SocketIO(context._api_endpoint, 80, LoggingNamespace) as socketIO:
+            with SocketIO(context._api_endpoint, verify=False) as socketIO:
                 socketIO.emit('job_logging', {'log_id': job_id, 'last_pos': 0, 'raw_mode': True})
                 socketIO.on('job', job_handler)
-                socketIO.wait(seconds=5)
                 while job['status'] == 'started':
+                    socketIO.wait(seconds=3)
                     job = context.jobs.retrieve(job_id)
-                    socketIO.wait(seconds=5)
         else:
             data = context.jobs.get_logs(job_id)
             click.echo(data.text, nl=False)
