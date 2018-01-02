@@ -9,3 +9,4 @@ pytz
 pyyaml
 requests
 tabulate
+socketIO-client

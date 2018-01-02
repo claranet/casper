@@ -1,11 +1,15 @@
+import base64
 import click
 import yaml
+import json
 from click import ClickException
 from tabulate import tabulate
 from .utils import regex_validate
 
 from pyghost.api_client import ApiClientException, JobCommands, JobStatuses
 from casper.main import cli, context
+
+from socketIO_client import SocketIO, LoggingNamespace
 
 
 @cli.group('job', help="Manage jobs")
@@ -59,14 +63,26 @@ def job_show(context, job_id):
 @click.option('--output', help="Path of downloaded log file", type=click.File('w'))
 @context
 def job_log(context, job_id, output):
+    def job_handler(args):
+        decoded = base64.b64decode(args['html'])
+        click.echo(decoded, nl=False)
+        if output is not None:
+            output.write(decoded.decode('utf-8'))
     try:
-        last_pos = 0
-        while True:
-            data = context.jobs.get_logs(job_id, last_pos)
-            last_pos = data['last_pos']
+        job = context.jobs.retrieve(job_id)
+
+        if job['status'] == 'started':
+            with SocketIO(context._api_endpoint, 80, LoggingNamespace) as socketIO:
+                socketIO.emit('job_logging', {'log_id': job_id, 'last_pos': 0, 'raw_mode': True})
+                socketIO.on('job', job_handler)
+                socketIO.wait(seconds=5)
+                while job['status'] == 'started':
+                    job = context.jobs.retrieve(job_id)
+                    socketIO.wait(seconds=5)
+        else:
+            data = context.jobs.get_logs(job_id)
+            click.echo(data.text, nl=False)
             if output is not None:
-                output.write(data['data'])
-            click.echo(data['data'], nl=False)
-            time.sleep(0.5)
+                output.write(data.text)
     except ApiClientException as e:
         raise ClickException(e) from e
