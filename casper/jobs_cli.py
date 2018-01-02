@@ -69,7 +69,6 @@ def job_log(context, job_id, output):
             output.write(decoded.decode('utf-8'))
     try:
         job = context.jobs.retrieve(job_id)
-        job['status'] = 'started'
         if job['status'] == 'started':
             with SocketIO(context._api_endpoint, verify=False) as socketIO:
                 socketIO.emit('job_logging', {'log_id': job_id, 'last_pos': 0, 'raw_mode': True})
