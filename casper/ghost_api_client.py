@@ -29,6 +29,10 @@ SAFE_DEPLOYMENT_STRATEGY_HALF = '50%'
 SAFE_DEPLOYMENT_STRATEGIES = (SAFE_DEPLOYMENT_STRATEGY_ONE_BY_ONE, SAFE_DEPLOYMENT_STRATEGY_THIRD,
                               SAFE_DEPLOYMENT_STRATEGY_QUARTER, SAFE_DEPLOYMENT_STRATEGY_HALF)
 
+BLUEGREEN_SWAP_STRATEGY_OVERLAP = 'overlap'
+BLUEGREEN_SWAP_STRATEGY_ISOLATED = 'isolated'
+BLUEGREEN_SWAP_STRATEGIES = (BLUEGREEN_SWAP_STRATEGY_OVERLAP, BLUEGREEN_SWAP_STRATEGY_ISOLATED)
+
 
 class ApiClientException(Exception):
     pass
@@ -354,6 +358,51 @@ class JobsApiClient(ApiClient):
         }
         return self.create(job)
 
+    def command_preparebluegreen(self, application_id, copy_ami = None, attach_elb = None):
+        """
+        Creates a `preparebluegreen` job
+        :param application_id: str: Application ID
+        :param copy_ami: bool: Copy AMI from online app
+        :param attach_elb: bool: Create a temporary ELB to attach to the Auto Scaling goup
+        :return: str: id of the created job
+        """
+        job = {
+            "command": "preparebluegreen",
+            "app_id": application_id,
+            "options": [],
+        }
+        if copy_ami is not None:
+            job["options"].append(str(copy_ami))
+        if attach_elb is not None:
+            job["options"].append(str(attach_elb))
+        return self.create(job)
+
+    def command_purgebluegreen(self, application_id):
+        """
+        Creates a `purgebluegreen` job
+        :param application_id: str: Application ID
+        :return: str: id of the created job
+        """
+        job = {
+            "command": "purgebluegreen",
+            "app_id": application_id,
+            "options": [],
+        }
+        return self.create(job)
+
+    def command_swapbluegreen(self, application_id, strategy):
+        """
+        Creates a `swapbluegreen` job
+        :param application_id: str: Application ID
+        :param strategy: str: Blue Green swap strategy
+        :return: str: id of the created job
+        """
+        job = {
+            "command": "swapbluegreen",
+            "app_id": application_id,
+            "options": [strategy],
+        }
+        return self.create(job)
 
 class DeploymentsApiClient(ApiClient):
     path = '/deployments/'

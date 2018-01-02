@@ -4,7 +4,7 @@ from click import ClickException, BadParameter, MissingParameter
 from casper.ghost_api_client import ApiClientException
 from casper.ghost_api_client import DEPLOYMENT_STRATEGIES, DEPLOYMENT_STRATEGY_SERIAL, SAFE_DEPLOYMENT_STRATEGIES
 from casper.ghost_api_client import SCRIPT_EXECUTION_STRATEGY_SERIAL, SAFE_DEPLOYMENT_STRATEGY_ONE_BY_ONE
-from casper.ghost_api_client import SCRIPT_EXECUTION_STRATEGIES
+from casper.ghost_api_client import SCRIPT_EXECUTION_STRATEGIES, BLUEGREEN_SWAP_STRATEGIES, BLUEGREEN_SWAP_STRATEGY_OVERLAP
 from casper.main import cli, context
 
 
@@ -64,7 +64,7 @@ def redeploy(context, application_id, deployment_id, strategy, safe_deploy_strat
         raise ClickException(e) from e
 
 
-@cli.command('executescript', short_help='Create an "executescript" job',
+@cli.command('executescript', short_help='Create a "executescript" job',
              help="Create a job that executes the script SCRIPT_FILE for APPLICATION_ID application")
 @click.argument('application-id')
 @click.argument('script-file', type=click.File())
@@ -148,3 +148,43 @@ def updateautoscaling(context, application_id):
         click.echo("Job creation OK - ID : {}".format(job_id))
     except ApiClientException as e:
         raise ClickException(e) from e
+
+
+@cli.command('preparebluegreen', short_help='Create a "preparebluegreen" job',
+              help="Create a job that prepare blue green for APPLICATION_ID application")
+@click.argument('application-id')
+@click.option('--copy-ami', type=bool, help="Copy AMI from online app")
+@click.option('--attach-elb', type=bool, help="Create a temporary ELB to attach to the Auto Scaling goup")
+@context
+def preparebluegreen(context, application_id, copy_ami, attach_elb):
+    try:
+        job_id = context.jobs.command_preparebluegreen(application_id, copy_ami, attach_elb)
+        click.echo("Job creation OK - ID : {}".format(job_id))
+    except ApiClientException as e:
+        raise ClickException from e
+
+
+@cli.command('purgebluegreen', short_help='Create a "purgebluegreen" job',
+              help="Create a job that purge blue green for APPLICATION_ID application")
+@click.argument('application-id')
+@context
+def purgebluegreen(context, application_id):
+    try:
+        job_id = context.jobs.command_purgebluegreen(application_id)
+        click.echo("Job creation OK - ID : {}".format(job_id))
+    except ApiClientException as e:
+        raise ClickException from e
+
+
+@cli.command('swapbluegreen', short_help='Create a "swapbluegreen" job',
+              help="Create a job that swap blue green for APPLICATION_ID application")
+@click.argument('application-id')
+@click.option('--strategy', type=click.Choice(BLUEGREEN_SWAP_STRATEGIES), default=BLUEGREEN_SWAP_STRATEGY_OVERLAP,
+              help="Blue Green swap strategy (default {})".format(BLUEGREEN_SWAP_STRATEGY_OVERLAP))
+@context
+def swapbluegreen(context, application_id, strategy):
+    try:
+        job_id = context.jobs.command_swapbluegreen(application_id, strategy)
+        click.echo("Job creation OK - ID : {}".format(job_id))
+    except ApiClientException as e:
+        raise ClickException from e
