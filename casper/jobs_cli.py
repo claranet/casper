@@ -63,7 +63,7 @@ def job_show(context, job_id):
 @context
 def job_log(context, job_id, output):
     def job_handler(args):
-        decoded = base64.b64decode(args['html'])
+        decoded = base64.b64decode(args['raw'])
         click.echo(decoded, nl=False)
         if output is not None:
             output.write(decoded.decode('utf-8'))
