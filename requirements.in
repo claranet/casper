@@ -8,5 +8,5 @@ pip-tools
 pytz
 pyyaml
 requests
-tabulate
 socketIO-client
+tabulate
