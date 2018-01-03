@@ -358,7 +358,7 @@ class JobsApiClient(ApiClient):
         }
         return self.create(job)
 
-    def command_preparebluegreen(self, application_id, copy_ami = None, attach_elb = None):
+    def command_preparebluegreen(self, application_id, copy_ami=False, attach_elb=False):
         """
         Creates a `preparebluegreen` job
         :param application_id: str: Application ID
@@ -369,12 +369,8 @@ class JobsApiClient(ApiClient):
         job = {
             "command": "preparebluegreen",
             "app_id": application_id,
-            "options": [],
+            "options": [str(copy_ami),str(attach_elb)],
         }
-        if copy_ami is not None:
-            job["options"].append(str(copy_ami))
-        if attach_elb is not None:
-            job["options"].append(str(attach_elb))
         return self.create(job)
 
     def command_purgebluegreen(self, application_id):
@@ -390,7 +386,7 @@ class JobsApiClient(ApiClient):
         }
         return self.create(job)
 
-    def command_swapbluegreen(self, application_id, strategy):
+    def command_swapbluegreen(self, application_id, strategy=BLUEGREEN_SWAP_STRATEGY_OVERLAP):
         """
         Creates a `swapbluegreen` job
         :param application_id: str: Application ID
