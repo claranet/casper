@@ -69,11 +69,11 @@ def job_log(context, job_id, output):
             output.write(decoded.decode('utf-8'))
     try:
         job = context.jobs.retrieve(job_id)
-        if job['status'] == 'started':
+        if job['status'] == JobStatuses.STARTED.value:
             with SocketIO(context._api_endpoint, verify=False) as socketIO:
                 socketIO.emit('job_logging', {'log_id': job_id, 'last_pos': 0, 'raw_mode': True})
                 socketIO.on('job', job_handler)
-                while job['status'] == 'started':
+                while job['status'] == JobStatuses.STARTED.value:
                     socketIO.wait(seconds=3)
                     job = context.jobs.retrieve(job_id)
         else:
