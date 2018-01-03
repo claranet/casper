@@ -78,8 +78,8 @@ def job_log(context, job_id, output):
                     job = context.jobs.retrieve(job_id)
         else:
             data = context.jobs.get_logs(job_id)
-            click.echo(data.text, nl=False)
+            click.echo(data, nl=False)
             if output is not None:
-                output.write(data.text)
+                output.write(data)
     except ApiClientException as e:
         raise ClickException(e) from e
