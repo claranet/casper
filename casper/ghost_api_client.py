@@ -358,7 +358,7 @@ class JobsApiClient(ApiClient):
         }
         return self.create(job)
 
-    def command_preparebluegreen(self, application_id, copy_ami=False, attach_elb=False):
+    def command_preparebluegreen(self, application_id, copy_ami=False, attach_elb=True):
         """
         Creates a `preparebluegreen` job
         :param application_id: str: Application ID

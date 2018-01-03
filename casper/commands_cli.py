@@ -154,7 +154,7 @@ def updateautoscaling(context, application_id):
               help="Create a job that prepare blue green for APPLICATION_ID application")
 @click.argument('application-id')
 @click.option('--copy-ami', type=bool, help="Copy AMI from online app", default=False)
-@click.option('--attach-elb', type=bool, help="Create a temporary ELB to attach to the Auto Scaling goup", default=False)
+@click.option('--attach-elb', type=bool, help="Create a temporary ELB to attach to the Auto Scaling goup", default=True)
 @context
 def preparebluegreen(context, application_id, copy_ami, attach_elb):
     try:
