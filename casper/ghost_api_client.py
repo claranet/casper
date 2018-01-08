@@ -369,7 +369,7 @@ class JobsApiClient(ApiClient):
         job = {
             "command": "preparebluegreen",
             "app_id": application_id,
-            "options": [str(copy_ami),str(attach_elb)],
+            "options": [str(copy_ami), str(attach_elb)],
         }
         return self.create(job)
 
@@ -399,6 +399,7 @@ class JobsApiClient(ApiClient):
             "options": [strategy],
         }
         return self.create(job)
+
 
 class DeploymentsApiClient(ApiClient):
     path = '/deployments/'

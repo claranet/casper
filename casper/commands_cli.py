@@ -4,7 +4,8 @@ from click import ClickException, BadParameter, MissingParameter
 from casper.ghost_api_client import ApiClientException
 from casper.ghost_api_client import DEPLOYMENT_STRATEGIES, DEPLOYMENT_STRATEGY_SERIAL, SAFE_DEPLOYMENT_STRATEGIES
 from casper.ghost_api_client import SCRIPT_EXECUTION_STRATEGY_SERIAL, SAFE_DEPLOYMENT_STRATEGY_ONE_BY_ONE
-from casper.ghost_api_client import SCRIPT_EXECUTION_STRATEGIES, BLUEGREEN_SWAP_STRATEGIES, BLUEGREEN_SWAP_STRATEGY_OVERLAP
+from casper.ghost_api_client import SCRIPT_EXECUTION_STRATEGIES, BLUEGREEN_SWAP_STRATEGIES, \
+    BLUEGREEN_SWAP_STRATEGY_OVERLAP
 from casper.main import cli, context
 
 
@@ -151,10 +152,11 @@ def updateautoscaling(context, application_id):
 
 
 @cli.command('preparebluegreen', short_help='Create a "preparebluegreen" job',
-              help="Create a job that prepare blue green for APPLICATION_ID application")
+             help="Create a job that prepares the blue-green environment for APPLICATION_ID application")
 @click.argument('application-id')
-@click.option('--copy-ami', type=bool, help="Copy AMI from online app", default=False)
-@click.option('--attach-elb', type=bool, help="Create a temporary ELB to attach to the Auto Scaling goup", default=True)
+@click.option('--copy-ami', type=bool, help="Copy the AMI from the online application if true.", default=False)
+@click.option('--attach-elb', type=bool, help="Create a temporary ELB to attach to the Auto Scaling group if true.",
+              default=True)
 @context
 def preparebluegreen(context, application_id, copy_ami, attach_elb):
     try:
@@ -165,7 +167,7 @@ def preparebluegreen(context, application_id, copy_ami, attach_elb):
 
 
 @cli.command('purgebluegreen', short_help='Create a "purgebluegreen" job',
-              help="Create a job that purge blue green for APPLICATION_ID application")
+             help="Create a job that purges the offline blue-green environment for APPLICATION_ID application")
 @click.argument('application-id')
 @context
 def purgebluegreen(context, application_id):
@@ -177,10 +179,10 @@ def purgebluegreen(context, application_id):
 
 
 @cli.command('swapbluegreen', short_help='Create a "swapbluegreen" job',
-              help="Create a job that swap blue green for APPLICATION_ID application")
+             help="Create a job that swaps the blue-green environment for APPLICATION_ID application")
 @click.argument('application-id')
 @click.option('--strategy', type=click.Choice(BLUEGREEN_SWAP_STRATEGIES), default=BLUEGREEN_SWAP_STRATEGY_OVERLAP,
-              help="Blue Green swap strategy (default {})".format(BLUEGREEN_SWAP_STRATEGY_OVERLAP))
+              help="Blue-green swap strategy (default {})".format(BLUEGREEN_SWAP_STRATEGY_OVERLAP))
 @context
 def swapbluegreen(context, application_id, strategy):
     try:
