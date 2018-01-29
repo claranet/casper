@@ -48,6 +48,8 @@ Any missing information for a profile will be prompted.
 Enable autocompletion
 ---------------------
 
+Note: Bash completion is only available if a script has been installed properly, and not executed through the python command, cf. <http://click.pocoo.org/5/bashcomplete/#limitations>
+
 Bash user:
 
 ```bash
