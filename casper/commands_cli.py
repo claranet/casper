@@ -2,10 +2,10 @@ import click
 from click import ClickException, BadParameter, MissingParameter
 
 from casper.ghost_api_client import ApiClientException
-from casper.ghost_api_client import DEPLOYMENT_STRATEGIES, DEPLOYMENT_STRATEGY_SERIAL, SAFE_DEPLOYMENT_STRATEGIES
-from casper.ghost_api_client import SCRIPT_EXECUTION_STRATEGY_SERIAL, SAFE_DEPLOYMENT_STRATEGY_ONE_BY_ONE
-from casper.ghost_api_client import SCRIPT_EXECUTION_STRATEGIES, BLUEGREEN_SWAP_STRATEGIES, \
-    BLUEGREEN_SWAP_STRATEGY_OVERLAP
+from casper.ghost_api_client import BLUEGREEN_SWAP_STRATEGIES, BLUEGREEN_SWAP_STRATEGY_OVERLAP
+from casper.ghost_api_client import DEPLOYMENT_STRATEGIES, DEPLOYMENT_STRATEGY_SERIAL
+from casper.ghost_api_client import SAFE_DEPLOYMENT_STRATEGIES, SAFE_DEPLOYMENT_STRATEGY_ONE_BY_ONE
+from casper.ghost_api_client import SCRIPT_EXECUTION_STRATEGIES, SCRIPT_EXECUTION_STRATEGY_SERIAL
 from casper.main import cli, context
 
 
@@ -65,7 +65,7 @@ def redeploy(context, application_id, deployment_id, strategy, safe_deploy_strat
         raise ClickException(e) from e
 
 
-@cli.command('executescript', short_help='Create a "executescript" job',
+@cli.command('executescript', short_help='Create an "executescript" job',
              help="Create a job that executes the script SCRIPT_FILE for APPLICATION_ID application")
 @click.argument('application-id')
 @click.argument('script-file', type=click.File())
