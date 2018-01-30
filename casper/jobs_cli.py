@@ -63,10 +63,15 @@ def job_show(context, job_id):
 @context
 def job_log(context, job_id, output):
     def job_handler(args):
-        decoded = base64.b64decode(args['raw'])
-        click.echo(decoded, nl=False)
-        if output is not None:
-            output.write(decoded.decode('utf-8'))
+        if 'error' in args:
+            raise ClickException(args['error'])
+        try:
+            decoded = base64.b64decode(args['raw'])
+            click.echo(decoded, nl=False)
+            if output is not None:
+                output.write(decoded.decode('utf-8'))
+        except TypeError as e:
+            raise ClickException(e) from e
     try:
         job = context.jobs.retrieve(job_id)
         if job['status'] == JobStatuses.STARTED.value:
