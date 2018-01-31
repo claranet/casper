@@ -4,6 +4,7 @@ from click import ClickException, BadParameter, MissingParameter
 from casper.ghost_api_client import ApiClientException
 from casper.ghost_api_client import BLUEGREEN_SWAP_STRATEGIES, BLUEGREEN_SWAP_STRATEGY_OVERLAP
 from casper.ghost_api_client import DEPLOYMENT_STRATEGIES, DEPLOYMENT_STRATEGY_SERIAL
+from casper.ghost_api_client import ROLLING_UPDATE_STRATEGIES, ROLLING_UPDATE_STRATEGY_ONE_BY_ONE
 from casper.ghost_api_client import SAFE_DEPLOYMENT_STRATEGIES, SAFE_DEPLOYMENT_STRATEGY_ONE_BY_ONE
 from casper.ghost_api_client import SCRIPT_EXECUTION_STRATEGIES, SCRIPT_EXECUTION_STRATEGY_SERIAL
 from casper.main import cli, context
@@ -125,6 +126,20 @@ def destroyallinstances(context, application_id):
         click.echo("Job creation OK - ID : {}".format(job_id))
     except ApiClientException as e:
         raise ClickException(e) from e
+
+
+@cli.command('recreateinstances', short_help='Create a "recreateinstances" job',
+              help="Create a job that renews all the instances for APPLICATION_ID application")
+@click.argument('application-id')
+@click.option('--strategy', type=click.Choice(ROLLING_UPDATE_STRATEGIES),
+              help="Rolling-update strategy")
+@context
+def recreateinstances(context, application_id, strategy):
+    try:
+        job_id = context.jobs.command_recreateinstances(application_id, strategy)
+        click.echo("Job creation OK - ID : {}".format(job_id))
+    except ApiClientException as e:
+        raise ClickException from e
 
 
 @cli.command('updatelifecyclehooks', short_help='Create a "updatelifecyclehooks" job',

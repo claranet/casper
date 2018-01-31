@@ -33,6 +33,13 @@ BLUEGREEN_SWAP_STRATEGY_OVERLAP = 'overlap'
 BLUEGREEN_SWAP_STRATEGY_ISOLATED = 'isolated'
 BLUEGREEN_SWAP_STRATEGIES = (BLUEGREEN_SWAP_STRATEGY_OVERLAP, BLUEGREEN_SWAP_STRATEGY_ISOLATED)
 
+ROLLING_UPDATE_STRATEGY_ONE_BY_ONE = '1by1'
+ROLLING_UPDATE_STRATEGY_THIRD = '1/3'
+ROLLING_UPDATE_STRATEGY_QUARTER = '25%'
+ROLLING_UPDATE_STRATEGY_HALF = '50%'
+ROLLING_UPDATE_STRATEGIES = (ROLLING_UPDATE_STRATEGY_ONE_BY_ONE, ROLLING_UPDATE_STRATEGY_THIRD,
+                             ROLLING_UPDATE_STRATEGY_QUARTER, ROLLING_UPDATE_STRATEGY_HALF)
+
 
 class ApiClientException(Exception):
     pass
@@ -330,6 +337,22 @@ class JobsApiClient(ApiClient):
             "app_id": application_id,
             "options": [],
         }
+        return self.create(job)
+
+    def command_recreateinstances(self, application_id, strategy=None):
+        """
+        Creates a `recreateinstances` job
+        :param application_id: str: Application ID
+        :param strategy: str: Rolling Update strategy
+        :return: str: id of the created job
+        """
+        job = {
+            "command": "recreateinstances",
+            "app_id": application_id,
+            "options": [],
+        }
+        if strategy is not None:
+            job["options"].append(strategy);
         return self.create(job)
 
     def command_updatelifecyclehooks(self, application_id):
