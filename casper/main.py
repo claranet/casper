@@ -97,7 +97,8 @@ CONFIG_FILE_PATHS = (os.path.expanduser('~/.casper'), os.path.join(os.getcwd(), 
 @click.option('--profile', default="default", help="Profile name to use from config file")
 @click.option('--config-file', type=click.Path(exists=True),
               help='Location of config file to use (defaults ".casper" and "{}/.casper")'.format(os.path.expanduser("~")))
-@click.version_option(CURRENT_VERSION)
+@click.version_option(CURRENT_VERSION, '--version', '-v')
+@click.help_option('--help', '-h')
 @context
 def cli(context, verbose, profile, config_file):
     context.verbose = verbose
