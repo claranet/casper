@@ -65,6 +65,8 @@ def job_log(context, job_id, output):
     def job_handler(args):
         if 'error' in args:
             raise ClickException(args['error'])
+        if 'raw' not in args:
+            raise ClickException('Missing raw data. Please update your Cloud Deploy instance.')
         try:
             decoded = base64.b64decode(args['raw'])
             click.echo(decoded, nl=False)
