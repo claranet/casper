@@ -7,6 +7,8 @@ from click import Group
 
 from casper.ghost_api_client import AppsApiClient, JobsApiClient, DeploymentsApiClient
 
+CURRENT_VERSION = "2.0"
+
 
 class Context():
     def __init__(self):
@@ -95,6 +97,7 @@ CONFIG_FILE_PATHS = (os.path.expanduser('~/.casper'), os.path.join(os.getcwd(), 
 @click.option('--profile', default="default", help="Profile name to use from config file")
 @click.option('--config-file', type=click.Path(exists=True),
               help='Location of config file to use (defaults ".casper" and "{}/.casper")'.format(os.path.expanduser("~")))
+@click.version_option(CURRENT_VERSION)
 @context
 def cli(context, verbose, profile, config_file):
     context.verbose = verbose
