@@ -29,6 +29,11 @@ SAFE_DEPLOYMENT_STRATEGY_HALF = '50%'
 SAFE_DEPLOYMENT_STRATEGIES = (SAFE_DEPLOYMENT_STRATEGY_ONE_BY_ONE, SAFE_DEPLOYMENT_STRATEGY_THIRD,
                               SAFE_DEPLOYMENT_STRATEGY_QUARTER, SAFE_DEPLOYMENT_STRATEGY_HALF)
 
+APP_ENVIRONMENTS = ('prod', 'preprod', 'dev', 'staging', 'test', 'demo', 'int', 'uat', 'oat', 'dev')
+
+APP_ROLES = ('webfront', 'varnish', 'webcache', 'worker', 'bastion', 'webapi', 'database', 'search',
+             'loadbalancer', 'ami-base')
+
 
 class ApiClientException(Exception):
     pass
@@ -175,6 +180,15 @@ class ApiClient(object):
 class AppsApiClient(ApiClient):
     path = '/apps/'
 
+    def list(self, nb=DEFAULT_PAGE_SIZE, page=1, sort='-_updated', name=None, env=None, role=None):
+        query = []
+        if role != None:
+            query.append('"role":"{role}"'.format(role=role))
+        if env != None:
+            query.append('"env":"{env}"'.format(env=env))
+        if name != None:
+            query.append('"name":{{"$regex":"^{name}$"}}'.format(name=name.replace('*', '.*')))
+        return self._do_list(self.path, nb, page, sort, where='{' + ",".join(query) + '}');
 
 class JobsApiClient(ApiClient):
     path = '/jobs/'
