@@ -176,6 +176,16 @@ class AppsApiClient(ApiClient):
     path = '/apps/'
 
     def list(self, nb=DEFAULT_PAGE_SIZE, page=1, sort='-_updated', name=None, env=None, role=None):
+        """
+        List objects
+        :param nb: int: the number of objects to list
+        :param page: int: the page to fetch
+        :param sort: str: the object order
+        :param name: str: filter to apply on application name
+        :param env: str: filter to apply on application env
+        :param role: str: filter to apply on application role
+        :return: tuple: returns the tuple (objects, number of results, total number of objects, page fetched)
+        """
         query = []
         if role != None:
             query.append('"role":"{role}"'.format(role=role))
