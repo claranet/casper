@@ -29,11 +29,6 @@ SAFE_DEPLOYMENT_STRATEGY_HALF = '50%'
 SAFE_DEPLOYMENT_STRATEGIES = (SAFE_DEPLOYMENT_STRATEGY_ONE_BY_ONE, SAFE_DEPLOYMENT_STRATEGY_THIRD,
                               SAFE_DEPLOYMENT_STRATEGY_QUARTER, SAFE_DEPLOYMENT_STRATEGY_HALF)
 
-APP_ENVIRONMENTS = ('prod', 'preprod', 'dev', 'staging', 'test', 'demo', 'int', 'uat', 'oat', 'dev')
-
-APP_ROLES = ('webfront', 'varnish', 'webcache', 'worker', 'bastion', 'webapi', 'database', 'search',
-             'loadbalancer', 'ami-base')
-
 
 class ApiClientException(Exception):
     pass

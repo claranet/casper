@@ -4,7 +4,6 @@ from click import ClickException
 from tabulate import tabulate
 
 from casper.ghost_api_client import ApiClientException
-from casper.ghost_api_client import APP_ENVIRONMENTS, APP_ROLES
 from casper.main import cli, context
 
 
@@ -17,8 +16,8 @@ def apps():
 @click.option('--nb', default=10, help="Number of applications to fetch (default 10)")
 @click.option('--page', default=1, help="Page to fetch (default 1)")
 @click.option('--name', help="Filter list by application name")
-@click.option('--env', type=click.Choice(APP_ENVIRONMENTS), help="Filter by application environment")
-@click.option('--role', type=click.Choice(APP_ROLES), help="Filter by application role")
+@click.option('--env', help="Filter by application environment")
+@click.option('--role', help="Filter by application role")
 @context
 def apps_list(context, nb, page, name, env, role):
     try:
