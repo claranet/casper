@@ -1,5 +1,6 @@
 import click
 import yaml
+import re
 from click import ClickException
 from tabulate import tabulate
 
@@ -11,13 +12,24 @@ from casper.main import cli, context
 def apps():
     pass
 
+def validate_apps_options(ctx, param, value):
+    if value is not None:
+        if param.name == 'name':
+            pattern = '^[a-zA-Z0-9\*_.+-]*$'
+        elif param.name == 'env':
+            pattern = '^[a-z0-9\-\_]*$'
+        elif param.name == 'role':
+            pattern = '^[a-z0-9\-\_]*$'
+        if re.compile(pattern).match(value) == None:
+            raise click.BadParameter('{} is not a valid value'.format(value))
+    return value
 
 @apps.command('ls', help="List the applications")
 @click.option('--nb', default=10, help="Number of applications to fetch (default 10)")
 @click.option('--page', default=1, help="Page to fetch (default 1)")
-@click.option('--name', help="Filter list by application name")
-@click.option('--env', help="Filter by application environment")
-@click.option('--role', help="Filter by application role")
+@click.option('--name', help="Filter list by application name", callback=validate_apps_options)
+@click.option('--env', help="Filter by application environment", callback=validate_apps_options)
+@click.option('--role', help="Filter by application role", callback=validate_apps_options)
 @context
 def apps_list(context, nb, page, name, env, role):
     try:
