@@ -1,8 +1,8 @@
 import click
 import yaml
-import re
 from click import ClickException
 from tabulate import tabulate
+from .utils import regex_validate
 
 from casper.ghost_api_client import ApiClientException
 from casper.main import cli, context
@@ -12,13 +12,6 @@ from casper.main import cli, context
 def apps():
     pass
 
-def regex_validate(pattern):
-    def validate(ctx, param, value):
-        if value is not None:
-            if re.compile(pattern).match(value) == None:
-                raise click.BadParameter('{} is not a valid value'.format(value))
-        return value
-    return validate
 
 @apps.command('ls', help="List the applications")
 @click.option('--nb', default=10, help="Number of applications to fetch (default 10)")
