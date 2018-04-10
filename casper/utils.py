@@ -4,6 +4,7 @@ from click import BadParameter
 
 RFC1123_DATE_FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
 
+
 def regex_validate(pattern):
     def validate(ctx, param, value):
         if value is not None:

@@ -187,13 +187,14 @@ class AppsApiClient(ApiClient):
         :return: tuple: returns the tuple (objects, number of results, total number of objects, page fetched)
         """
         query = []
-        if role != None:
+        if role is not None:
             query.append('"role":"{role}"'.format(role=role))
-        if env != None:
+        if env is not None:
             query.append('"env":"{env}"'.format(env=env))
-        if name != None:
+        if name is not None:
             query.append('"name":{{"$regex":"^{name}$"}}'.format(name=name.replace('*', '.*')))
-        return self._do_list(self.path, nb, page, sort, where='{' + ",".join(query) + '}');
+        return self._do_list(self.path, nb, page, sort, where='{' + ",".join(query) + '}')
+
 
 class JobsApiClient(ApiClient):
     path = '/jobs/'
