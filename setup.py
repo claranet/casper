@@ -1,11 +1,12 @@
 from pip.req import parse_requirements
 from setuptools import setup, find_packages
+from casper.main import CURRENT_VERSION
 
 requirements = parse_requirements('requirements.txt', session='hack')
 
 setup(
     name='casper',
-    version='2.0',
+    version=CURRENT_VERSION,
     python_requires='>=3.4',
     packages=find_packages(),
     include_package_data=True,
