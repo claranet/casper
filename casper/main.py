@@ -7,7 +7,7 @@ from click import Group
 
 from casper.ghost_api_client import AppsApiClient, JobsApiClient, DeploymentsApiClient
 
-CURRENT_VERSION = "v2.0.0"
+CURRENT_VERSION = "v2.0.1"
 
 
 class Context():

@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v2.0.1
 ### bugfixes
 * GHOST-618 executescript command doesn't work
 
