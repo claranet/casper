@@ -2,12 +2,13 @@ import configparser
 
 import click
 import os
+import pkg_resources
 
 from click import Group
 
 from casper.ghost_api_client import AppsApiClient, JobsApiClient, DeploymentsApiClient
 
-CURRENT_VERSION = "v2.0.1"
+version = pkg_resources.require("casper")[0].version
 
 
 class Context():
@@ -97,7 +98,7 @@ CONFIG_FILE_PATHS = (os.path.expanduser('~/.casper'), os.path.join(os.getcwd(), 
 @click.option('--profile', default="default", help="Profile name to use from config file")
 @click.option('--config-file', type=click.Path(exists=True),
               help='Location of config file to use (defaults ".casper" and "{}/.casper")'.format(os.path.expanduser("~")))
-@click.version_option(CURRENT_VERSION, '--version', '-v')
+@click.version_option(version, '--version', '-v')
 @click.help_option('--help', '-h')
 @context
 def cli(context, verbose, profile, config_file):
