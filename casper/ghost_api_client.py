@@ -352,7 +352,7 @@ class JobsApiClient(ApiClient):
             "options": [],
         }
         if strategy is not None:
-            job["options"].append(strategy);
+            job["options"].append(strategy)
         return self.create(job)
 
     def command_updatelifecyclehooks(self, application_id):
