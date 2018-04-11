@@ -3,6 +3,7 @@
 ## Unreleased
 * GHOST-568 Implement applications filtering
 * GHOST-546 Document how to use revision in deploy command
+* Implement blue/green commands
 
 ## v2.0.1
 ### bugfixes
