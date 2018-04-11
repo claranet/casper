@@ -139,7 +139,7 @@ def recreateinstances(context, application_id, strategy):
         job_id = context.jobs.command_recreateinstances(application_id, strategy)
         click.echo("Job creation OK - ID : {}".format(job_id))
     except ApiClientException as e:
-        raise ClickException from e
+        raise ClickException(e) from e
 
 
 @cli.command('updatelifecyclehooks', short_help='Create a "updatelifecyclehooks" job',
