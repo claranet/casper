@@ -66,7 +66,7 @@ def redeploy(context, application_id, deployment_id, strategy, safe_deploy_strat
 @cli.command('executescript', short_help='Create an "executescript" job',
              help="Create a job that executes the script SCRIPT_FILE for APPLICATION_ID application")
 @click.argument('application-id')
-@click.argument('script-file')
+@click.argument('script-file', type=click.File())
 @click.option('--strategy', type=click.Choice(SCRIPT_EXECUTION_STRATEGIES), default=SCRIPT_EXECUTION_STRATEGY_SERIAL,
               help="Script execution strategy (default {})".format(SCRIPT_EXECUTION_STRATEGY_SERIAL))
 @click.option('--safe-deploy-strategy',
