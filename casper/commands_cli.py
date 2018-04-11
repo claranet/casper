@@ -163,7 +163,7 @@ def preparebluegreen(context, application_id, copy_ami, attach_elb):
         job_id = context.jobs.command_preparebluegreen(application_id, copy_ami, attach_elb)
         click.echo("Job creation OK - ID : {}".format(job_id))
     except ApiClientException as e:
-        raise ClickException from e
+        raise ClickException(e) from e
 
 
 @cli.command('purgebluegreen', short_help='Create a "purgebluegreen" job',
@@ -175,7 +175,7 @@ def purgebluegreen(context, application_id):
         job_id = context.jobs.command_purgebluegreen(application_id)
         click.echo("Job creation OK - ID : {}".format(job_id))
     except ApiClientException as e:
-        raise ClickException from e
+        raise ClickException(e) from e
 
 
 @cli.command('swapbluegreen', short_help='Create a "swapbluegreen" job',
@@ -189,4 +189,4 @@ def swapbluegreen(context, application_id, strategy):
         job_id = context.jobs.command_swapbluegreen(application_id, strategy)
         click.echo("Job creation OK - ID : {}".format(job_id))
     except ApiClientException as e:
-        raise ClickException from e
+        raise ClickException(e) from e
