@@ -16,7 +16,7 @@ def apps():
 @apps.command('ls', help="List the applications")
 @click.option('--nb', default=10, help="Number of applications to fetch (default 10)")
 @click.option('--page', default=1, help="Page to fetch (default 1)")
-@click.option('--name', help="Filter list by application name (possible use of wildcard '*')", callback=regex_validate('^[a-zA-Z0-9\*_.+-]*$'))
+@click.option('--name', help="Filter list by application name (regex usage possible)")
 @click.option('--env', help="Filter by application environment", callback=regex_validate('^[a-z0-9\-_]*$'))
 @click.option('--role', help="Filter by application role", callback=regex_validate('^[a-z0-9\-_]*$'))
 @context

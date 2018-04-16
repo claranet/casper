@@ -192,7 +192,7 @@ class AppsApiClient(ApiClient):
         if env is not None:
             query.append('"env":"{env}"'.format(env=env))
         if name is not None:
-            query.append('"name":{{"$regex":"^{name}$"}}'.format(name=name.replace('*', '.*')))
+            query.append('"name":{{"$regex":"{name}"}}'.format(name=name))
         return self._do_list(self.path, nb, page, sort, where='{' + ",".join(query) + '}')
 
 

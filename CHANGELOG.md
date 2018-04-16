@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased
-* GHOST-568 Implement applications filtring
+* GHOST-568 Implement applications filtering
 
 ## v2.0.1
 ### bugfixes
