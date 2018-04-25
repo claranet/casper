@@ -2,9 +2,11 @@ import click
 from click import ClickException, BadParameter, MissingParameter
 
 from casper.ghost_api_client import ApiClientException
-from casper.ghost_api_client import DEPLOYMENT_STRATEGIES, DEPLOYMENT_STRATEGY_SERIAL, SAFE_DEPLOYMENT_STRATEGIES
-from casper.ghost_api_client import SCRIPT_EXECUTION_STRATEGY_SERIAL, SAFE_DEPLOYMENT_STRATEGY_ONE_BY_ONE
-from casper.ghost_api_client import SCRIPT_EXECUTION_STRATEGIES
+from casper.ghost_api_client import BLUEGREEN_SWAP_STRATEGIES, BLUEGREEN_SWAP_STRATEGY_OVERLAP
+from casper.ghost_api_client import DEPLOYMENT_STRATEGIES, DEPLOYMENT_STRATEGY_SERIAL
+from casper.ghost_api_client import ROLLING_UPDATE_STRATEGIES, SAFE_DEPLOYMENT_STRATEGIES
+from casper.ghost_api_client import SAFE_DEPLOYMENT_STRATEGY_ONE_BY_ONE, SCRIPT_EXECUTION_STRATEGIES
+from casper.ghost_api_client import SCRIPT_EXECUTION_STRATEGY_SERIAL
 from casper.main import cli, context
 
 
@@ -126,6 +128,20 @@ def destroyallinstances(context, application_id):
         raise ClickException(e) from e
 
 
+@cli.command('recreateinstances', short_help='Create a "recreateinstances" job',
+              help="Create a job that renews all the instances for APPLICATION_ID application")
+@click.argument('application-id')
+@click.option('--strategy', type=click.Choice(ROLLING_UPDATE_STRATEGIES),
+              help="Rolling-update strategy")
+@context
+def recreateinstances(context, application_id, strategy):
+    try:
+        job_id = context.jobs.command_recreateinstances(application_id, strategy)
+        click.echo("Job creation OK - ID : {}".format(job_id))
+    except ApiClientException as e:
+        raise ClickException(e) from e
+
+
 @cli.command('updatelifecyclehooks', short_help='Create a "updatelifecyclehooks" job',
              help="Create a job that updates lifecycle hooks APPLICATION_ID application")
 @click.argument('application-id')
@@ -145,6 +161,47 @@ def updatelifecyclehooks(context, application_id):
 def updateautoscaling(context, application_id):
     try:
         job_id = context.jobs.command_updateautoscaling(application_id)
+        click.echo("Job creation OK - ID : {}".format(job_id))
+    except ApiClientException as e:
+        raise ClickException(e) from e
+
+
+@cli.command('preparebluegreen', short_help='Create a "preparebluegreen" job',
+             help="Create a job that prepares the blue-green environment for APPLICATION_ID application")
+@click.argument('application-id')
+@click.option('--copy-ami', type=bool, help="Copy the AMI from the online application if true.", default=False)
+@click.option('--attach-elb', type=bool, help="Create a temporary ELB to attach to the Auto Scaling group if true.",
+              default=True)
+@context
+def preparebluegreen(context, application_id, copy_ami, attach_elb):
+    try:
+        job_id = context.jobs.command_preparebluegreen(application_id, copy_ami, attach_elb)
+        click.echo("Job creation OK - ID : {}".format(job_id))
+    except ApiClientException as e:
+        raise ClickException(e) from e
+
+
+@cli.command('purgebluegreen', short_help='Create a "purgebluegreen" job',
+             help="Create a job that purges the offline blue-green environment for APPLICATION_ID application")
+@click.argument('application-id')
+@context
+def purgebluegreen(context, application_id):
+    try:
+        job_id = context.jobs.command_purgebluegreen(application_id)
+        click.echo("Job creation OK - ID : {}".format(job_id))
+    except ApiClientException as e:
+        raise ClickException(e) from e
+
+
+@cli.command('swapbluegreen', short_help='Create a "swapbluegreen" job',
+             help="Create a job that swaps the blue-green environment for APPLICATION_ID application")
+@click.argument('application-id')
+@click.option('--strategy', type=click.Choice(BLUEGREEN_SWAP_STRATEGIES), default=BLUEGREEN_SWAP_STRATEGY_OVERLAP,
+              help="Blue-green swap strategy (default {})".format(BLUEGREEN_SWAP_STRATEGY_OVERLAP))
+@context
+def swapbluegreen(context, application_id, strategy):
+    try:
+        job_id = context.jobs.command_swapbluegreen(application_id, strategy)
         click.echo("Job creation OK - ID : {}".format(job_id))
     except ApiClientException as e:
         raise ClickException(e) from e

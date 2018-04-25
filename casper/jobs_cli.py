@@ -30,7 +30,7 @@ def jobs_list(context, nb, page):
         [[
             job['_id'], job['app_id']['name'] if job.get('app_id') else '',
             job['command'], job['status'], job['user'], job['_created']
-         ] for job in jobs],
+        ] for job in jobs],
         headers=['ID', 'Application name', 'Command', 'Status', 'User', 'Date']
     ))
 
