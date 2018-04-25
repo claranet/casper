@@ -6,6 +6,7 @@
 * GHOST-524 Implement blue/green commands
 * GHOST-550 Implement recreateinstances command
 * GHOST-630 Dependencies are not installed
+* GHOST-528 Added autocomplete instructions
 
 ## v2.0.1
 ### bugfixes
