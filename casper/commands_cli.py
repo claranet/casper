@@ -11,7 +11,8 @@ from casper.main import cli, context
 @cli.command('deploy', short_help='Create a "deploy" job',
              help="Create a job that deploys APPLICATION_ID application")
 @click.argument('application-id')
-@click.option('--module', '-m', multiple=True, help="Module(s) name(s) to deploy")
+@click.option('--module', '-m', multiple=True, help="Module(s) name(s) to deploy, revision can be set by "
+                                                    "suffixing with :rev. (example: my_module:v1)")
 @click.option('--all-modules', is_flag=True, help="Flag for all modules deployment")
 @click.option('--strategy', type=click.Choice(DEPLOYMENT_STRATEGIES),
               help="Deployment strategy (default {})".format(DEPLOYMENT_STRATEGY_SERIAL))
