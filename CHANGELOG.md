@@ -1,13 +1,15 @@
 # Changelog
 
-## Unreleased
+## v2.1.0
+### features
 * GHOST-568 Implement applications filtering
 * GHOST-546 Document how to use revision in deploy command
 * GHOST-524 Implement blue/green commands
 * GHOST-550 Implement recreateinstances command
-* GHOST-630 Dependencies are not installed
 * GHOST-528 Added autocomplete instructions
 * GHOST-597 Update pip dependencies
+### bugfixes
+* GHOST-630 Dependencies are not installed
 
 ## v2.0.1
 ### bugfixes

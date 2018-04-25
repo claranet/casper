@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 requirements = parse_requirements('requirements.txt', session='hack')
 
-CURRENT_VERSION = "v2.0.1"
+CURRENT_VERSION = "v2.1.0"
 
 setup(
     name='casper',
