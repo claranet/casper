@@ -5,6 +5,7 @@
 * GHOST-546 Document how to use revision in deploy command
 * GHOST-524 Implement blue/green commands
 * GHOST-550 Implement recreateinstances command
+* GHOST-630 Dependencies are not installed
 
 ## v2.0.1
 ### bugfixes
