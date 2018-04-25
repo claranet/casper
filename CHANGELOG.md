@@ -7,6 +7,7 @@
 * GHOST-550 Implement recreateinstances command
 * GHOST-630 Dependencies are not installed
 * GHOST-528 Added autocomplete instructions
+* GHOST-597 Update pip dependencies
 
 ## v2.0.1
 ### bugfixes
