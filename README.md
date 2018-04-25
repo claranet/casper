@@ -1,9 +1,15 @@
-Casper
-======
+# Casper - Cloud Deploy CLI
+[![Documentation](https://img.shields.io/badge/documentation-cloud--deploy-brightgreen.svg)](https://docs.cloud-deploy.io/rst/cli.html) [![API Reference](http://img.shields.io/badge/api-reference-blue.svg)](https://docs.cloud-deploy.io/rst/api.html) [![Changelog](https://img.shields.io/badge/changelog-release-green.svg)](https://github.com/claranet/casper/blob/master/CHANGELOG.md) [![Apache V2 License](http://img.shields.io/badge/license-Apache%20V2-blue.svg)](https://github.com/claranet/casper/blob/master/LICENSE)
+
 
 Casper is a command line tool that interacts with Cloud Deploy (Ghost project).
 
-Cloud Deploy documentation is available here : [https://docs.cloudeploy.io](https://docs.cloudeploy.io)
+Cloud Deploy documentation is available here: [https://docs.cloudeploy.io](https://docs.cloudeploy.io)
+
+Requirements
+------------
+
+* Python 3.4+
 
 Installation
 ------------
