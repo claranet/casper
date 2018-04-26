@@ -66,7 +66,7 @@ def job_log(context, job_id, output):
         if 'error' in args:
             raise ClickException(args['error'])
         if 'raw' not in args:
-            raise ClickException('Missing raw data. Please update your Cloud Deploy instance.')
+            raise ClickException('Missing raw data. Please update your Cloud Deploy instance. (need at least 18.05)')
         try:
             decoded = base64.b64decode(args['raw'])
             click.echo(decoded, nl=False)
@@ -83,6 +83,8 @@ def job_log(context, job_id, output):
                 while job['status'] == JobStatuses.STARTED.value:
                     socketIO.wait(seconds=3)
                     job = context.jobs.retrieve(job_id)
+        elif job['status'] == JobStatuses.INIT.value:
+            raise ClickException('The job has not started yet.')
         else:
             data = context.jobs.get_logs(job_id)
             click.echo(data, nl=False)
