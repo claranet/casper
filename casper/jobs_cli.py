@@ -1,5 +1,6 @@
 import base64
 import click
+import requests
 import yaml
 from click import ClickException
 from tabulate import tabulate
@@ -74,15 +75,20 @@ def job_log(context, job_id, output):
                 output.write(decoded.decode('utf-8'))
         except TypeError as e:
             raise ClickException(e) from e
+
     try:
         job = context.jobs.retrieve(job_id)
         if job['status'] == JobStatuses.STARTED.value:
-            with SocketIO(context._api_endpoint, verify=False) as socketIO:
-                socketIO.emit('job_logging', {'log_id': job_id, 'last_pos': 0, 'raw_mode': True})
-                socketIO.on('job', job_handler)
-                while job['status'] == JobStatuses.STARTED.value:
-                    socketIO.wait(seconds=3)
-                    job = context.jobs.retrieve(job_id)
+            check_ws = requests.get('{}/socket.io/'.format(context._api_endpoint))
+            if check_ws.status_code == 200:
+                with SocketIO(context._api_endpoint, verify=False) as socketIO:
+                    socketIO.emit('job_logging', {'log_id': job_id, 'last_pos': 0, 'raw_mode': True})
+                    socketIO.on('job', job_handler)
+                    while job['status'] == JobStatuses.STARTED.value:
+                        socketIO.wait(seconds=3)
+                        job = context.jobs.retrieve(job_id)
+            else:
+                raise ClickException('Websocket server is unavailable.')
         elif job['status'] == JobStatuses.INIT.value:
             raise ClickException('The job has not started yet.')
         else:
