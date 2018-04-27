@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### features
+* GHOST-623 Handle application `description` field
+
 ## v2.1.0
 ### features
 * GHOST-568 Implement applications filtering
