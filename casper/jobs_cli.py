@@ -1,5 +1,6 @@
 import base64
 import click
+import re
 import requests
 import yaml
 from click import ClickException
@@ -67,14 +68,15 @@ def job_log(context, job_id, output):
         if 'error' in args:
             raise ClickException(args['error'])
         if 'raw' not in args:
-            raise ClickException('Missing raw data. Please update your Cloud Deploy instance. (need at least 18.05)')
-        try:
-            decoded = base64.b64decode(args['raw'])
-            click.echo(decoded, nl=False)
-            if output is not None:
-                output.write(decoded.decode('utf-8'))
-        except TypeError as e:
-            raise ClickException(e) from e
+            data = re.sub('<[^<]+?>', '', args['html'].replace('</div><div class="panel panel-default">', "\n"))+"\n"
+        else:
+            try:
+                data = base64.b64decode(args['raw'])
+            except TypeError as e:
+                raise ClickException(e) from e
+        click.echo(data, nl=False)
+        if output is not None:
+            output.write(data.decode('utf-8'))
 
     try:
         job = context.jobs.retrieve(job_id)
