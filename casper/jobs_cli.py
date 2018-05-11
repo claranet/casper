@@ -2,6 +2,7 @@ import base64
 import click
 import re
 import requests
+import time
 import yaml
 from click import ClickException
 from tabulate import tabulate
@@ -62,8 +63,9 @@ def job_show(context, job_id):
 @jobs.command('log', help="Show the logs of a job")
 @click.argument('job-id')
 @click.option('--output', help="Path of downloaded log file", type=click.File('w'))
+@click.option('--waitstart', help="If job is in init state, wait for start", is_flag=True)
 @context
-def job_log(context, job_id, output):
+def job_log(context, job_id, output, waitstart):
     def job_handler(args):
         if 'error' in args:
             raise ClickException(args['error'])
@@ -80,6 +82,9 @@ def job_log(context, job_id, output):
 
     try:
         job = context.jobs.retrieve(job_id)
+        while waitstart and job['status'] == JobStatuses.INIT.value:
+            job = context.jobs.retrieve(job_id)
+            time.sleep(3)
         if job['status'] == JobStatuses.STARTED.value:
             check_ws = requests.get('{}/socket.io/'.format(context._api_endpoint))
             if check_ws.status_code == 200:
