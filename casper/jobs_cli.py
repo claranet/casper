@@ -62,7 +62,7 @@ def job_show(context, job_id):
 
 @jobs.command('log', help="Show the logs of a job")
 @click.argument('job-id')
-@click.option('--output', help="Path of downloaded log file", type=click.File('w'))
+@click.option('--output', help="Path of output log file", type=click.File('w'))
 @click.option('--waitstart', help="If job is in init state, wait for start", is_flag=True)
 @context
 def job_log(context, job_id, output, waitstart):
@@ -70,7 +70,7 @@ def job_log(context, job_id, output, waitstart):
         if 'error' in args:
             raise ClickException(args['error'])
         if 'raw' not in args:
-            data = re.sub('<[^<]+?>', '', args['html'].replace('</div><div class="panel panel-default">', "\n"))+"\n"
+            data = re.sub('<[^<]+?>', '', args['html'].replace('</div><div class="panel panel-default">', "\n")) + "\n"
         else:
             try:
                 data = base64.b64decode(args['raw'])
