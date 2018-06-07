@@ -22,7 +22,7 @@ from pyghost.api_client import SCRIPT_EXECUTION_STRATEGY_SERIAL
               help="Safe deployment strategy (default none)")
 @click.option('--live-logs', help="Wait for job starting and output logs", is_flag=True)
 @click.option('--output', help="Path of output log file", type=click.File('w'))
-@click.option('--no-color', help="Remove ANSII color from output", is_flag=True)
+@click.option('--no-color', help="Remove ANSI color from output", is_flag=True)
 @context
 def deploy(context, application_id, module, all_modules, strategy, safe_deploy_strategy, live_logs, output, no_color):
     # TODO find a "clicker" way to do this parameter validation
@@ -62,7 +62,7 @@ def deploy(context, application_id, module, all_modules, strategy, safe_deploy_s
               help="Safe deployment strategy (default none)")
 @click.option('--live-logs', help="Wait for job starting and output logs", is_flag=True)
 @click.option('--output', help="Path of output log file", type=click.File('w'))
-@click.option('--no-color', help="Remove ANSII color from output", is_flag=True)
+@click.option('--no-color', help="Remove ANSI color from output", is_flag=True)
 @context
 def redeploy(context, application_id, deployment_id, strategy, safe_deploy_strategy, live_logs, output, no_color):
     try:
@@ -85,7 +85,7 @@ def redeploy(context, application_id, deployment_id, strategy, safe_deploy_strat
 @click.option('--module-context', help="Force script working dir from module context (default none)")
 @click.option('--live-logs', help="Wait for job starting and output logs", is_flag=True)
 @click.option('--output', help="Path of output log file", type=click.File('w'))
-@click.option('--no-color', help="Remove ANSII color from output", is_flag=True)
+@click.option('--no-color', help="Remove ANSI color from output", is_flag=True)
 @context
 def executescript(context, application_id, script_file, strategy, safe_deploy_strategy, instance_ip, module_context, live_logs, output, no_color):
     try:
@@ -104,7 +104,7 @@ def executescript(context, application_id, script_file, strategy, safe_deploy_st
 @click.option('--skip-bootstrap', type=bool, help="Force skipping the provisioner bootstrap")
 @click.option('--live-logs', help="Wait for job starting and output logs", is_flag=True)
 @click.option('--output', help="Path of output log file", type=click.File('w'))
-@click.option('--no-color', help="Remove ANSII color from output", is_flag=True)
+@click.option('--no-color', help="Remove ANSI color from output", is_flag=True)
 @context
 def buildimage(context, application_id, instance_type, skip_bootstrap, live_logs, output, no_color):
     try:
@@ -121,7 +121,7 @@ def buildimage(context, application_id, instance_type, skip_bootstrap, live_logs
 @click.option('--private-ip-address', help="Force private IP address")
 @click.option('--live-logs', help="Wait for job starting and output logs", is_flag=True)
 @click.option('--output', help="Path of output log file", type=click.File('w'))
-@click.option('--no-color', help="Remove ANSII color from output", is_flag=True)
+@click.option('--no-color', help="Remove ANSI color from output", is_flag=True)
 @context
 def createinstance(context, application_id, subnet_id, private_ip_address, live_logs, output, no_color):
     try:
@@ -136,7 +136,7 @@ def createinstance(context, application_id, subnet_id, private_ip_address, live_
 @click.argument('application-id')
 @click.option('--live-logs', help="Wait for job starting and output logs", is_flag=True)
 @click.option('--output', help="Path of output log file", type=click.File('w'))
-@click.option('--no-color', help="Remove ANSII color from output", is_flag=True)
+@click.option('--no-color', help="Remove ANSI color from output", is_flag=True)
 @context
 def destroyallinstances(context, application_id, live_logs, output, no_color):
     try:
@@ -153,7 +153,7 @@ def destroyallinstances(context, application_id, live_logs, output, no_color):
               help="Rolling-update strategy")
 @click.option('--live-logs', help="Wait for job starting and output logs", is_flag=True)
 @click.option('--output', help="Path of output log file", type=click.File('w'))
-@click.option('--no-color', help="Remove ANSII color from output", is_flag=True)
+@click.option('--no-color', help="Remove ANSI color from output", is_flag=True)
 @context
 def recreateinstances(context, application_id, strategy, live_logs, output, no_color):
     try:
@@ -168,7 +168,7 @@ def recreateinstances(context, application_id, strategy, live_logs, output, no_c
 @click.argument('application-id')
 @click.option('--live-logs', help="Wait for job starting and output logs", is_flag=True)
 @click.option('--output', help="Path of output log file", type=click.File('w'))
-@click.option('--no-color', help="Remove ANSII color from output", is_flag=True)
+@click.option('--no-color', help="Remove ANSI color from output", is_flag=True)
 @context
 def updatelifecyclehooks(context, application_id, live_logs, output, no_color):
     try:
@@ -183,7 +183,7 @@ def updatelifecyclehooks(context, application_id, live_logs, output, no_color):
 @click.argument('application-id')
 @click.option('--live-logs', help="Wait for job starting and output logs", is_flag=True)
 @click.option('--output', help="Path of output log file", type=click.File('w'))
-@click.option('--no-color', help="Remove ANSII color from output", is_flag=True)
+@click.option('--no-color', help="Remove ANSI color from output", is_flag=True)
 @context
 def updateautoscaling(context, application_id, live_logs, output, no_color):
     try:
@@ -201,7 +201,7 @@ def updateautoscaling(context, application_id, live_logs, output, no_color):
               default=True)
 @click.option('--live-logs', help="Wait for job starting and output logs", is_flag=True)
 @click.option('--output', help="Path of output log file", type=click.File('w'))
-@click.option('--no-color', help="Remove ANSII color from output", is_flag=True)
+@click.option('--no-color', help="Remove ANSI color from output", is_flag=True)
 @context
 def preparebluegreen(context, application_id, copy_ami, attach_elb, live_logs, output, no_color):
     try:
@@ -216,7 +216,7 @@ def preparebluegreen(context, application_id, copy_ami, attach_elb, live_logs, o
 @click.argument('application-id')
 @click.option('--live-logs', help="Wait for job starting and output logs", is_flag=True)
 @click.option('--output', help="Path of output log file", type=click.File('w'))
-@click.option('--no-color', help="Remove ANSII color from output", is_flag=True)
+@click.option('--no-color', help="Remove ANSI color from output", is_flag=True)
 @context
 def purgebluegreen(context, application_id, live_logs, output, no_color):
     try:
@@ -233,7 +233,7 @@ def purgebluegreen(context, application_id, live_logs, output, no_color):
               help="Blue-green swap strategy (default {})".format(BLUEGREEN_SWAP_STRATEGY_OVERLAP))
 @click.option('--live-logs', help="Wait for job starting and output logs", is_flag=True)
 @click.option('--output', help="Path of output log file", type=click.File('w'))
-@click.option('--no-color', help="Remove ANSII color from output", is_flag=True)
+@click.option('--no-color', help="Remove ANSI color from output", is_flag=True)
 @context
 def swapbluegreen(context, application_id, strategy, live_logs, output, no_color):
     try:
