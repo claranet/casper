@@ -7,7 +7,7 @@ from click import ClickException
 from tabulate import tabulate
 
 from casper import utils
-from casper.ghost_api_client import ApiClientException
+from pyghost.api_client import ApiClientException
 from casper.main import cli, context
 
 

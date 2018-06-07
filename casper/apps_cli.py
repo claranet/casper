@@ -4,7 +4,7 @@ from click import ClickException
 from tabulate import tabulate
 from .utils import regex_validate
 
-from casper.ghost_api_client import ApiClientException
+from pyghost.api_client import ApiClientException
 from casper.main import cli, context
 
 
