@@ -24,7 +24,7 @@ def deployments():
 @click.option('--env', help="Filter by application environment", callback=regex_validate('^[a-z0-9\-_]*$'))
 @click.option('--role', help="Filter by application role", callback=regex_validate('^[a-z0-9\-_]*$'))
 @click.option('--revision', help="Filter by deployment revision", callback=regex_validate('^[a-z0-9\-_]*$'))
-@click.option('--module', help="Filter by deployment module")
+@click.option('--module', help="Filter by deployment module (regex usage possible)")
 @context
 def deployments_list(context, nb, page, application, env, role, revision, module):
     try:
