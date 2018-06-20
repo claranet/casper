@@ -4,7 +4,7 @@ from click import ClickException
 from tabulate import tabulate
 from .utils import regex_validate
 
-from pyghost.api_client import ApiClientException, JobStatuses
+from pyghost.api_client import ApiClientException, JobCommands, JobStatuses
 from casper.main import cli, context
 
 
@@ -19,7 +19,7 @@ def jobs():
 @click.option('--application', help="Filter list by application name (regex usage possible)")
 @click.option('--env', help="Filter by application environment", callback=regex_validate('^[a-z0-9\-_]*$'))
 @click.option('--role', help="Filter by application role", callback=regex_validate('^[a-z0-9\-_]*$'))
-@click.option('--command', help="Filter by job command")
+@click.option('--command', help="Filter by job command", type=click.Choice(list(map(str, JobCommands))))
 @click.option('--status', help="Filter by job status", type=click.Choice(list(map(str, JobStatuses))))
 @click.option('--user', help="Filter by job user")
 @context
