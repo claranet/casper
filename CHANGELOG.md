@@ -4,6 +4,7 @@
 ### features
 * GHOST-623 Handle application `description` field
 * GHOST-657 Uses common Pyhon SDK Client
+* GHOST-603 Implement deployments and jobs filtering
 
 ## v2.1.0
 ### features

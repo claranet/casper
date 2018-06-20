@@ -5,6 +5,7 @@ import pytz
 import yaml
 from click import ClickException
 from tabulate import tabulate
+from .utils import regex_validate
 
 from casper import utils
 from pyghost.api_client import ApiClientException
@@ -19,10 +20,15 @@ def deployments():
 @deployments.command('ls', help="List the deployments")
 @click.option('--nb', default=10, help="Number of deployments to fetch (default 10)")
 @click.option('--page', default=1, help="Page to fetch (default 1)")
+@click.option('--application', help="Filter list by application name (regex usage possible)")
+@click.option('--env', help="Filter by application environment", callback=regex_validate('^[a-z0-9\-_]*$'))
+@click.option('--role', help="Filter by application role", callback=regex_validate('^[a-z0-9\-_]*$'))
+@click.option('--revision', help="Filter by deployment revision", callback=regex_validate('^[a-z0-9\-_]*$'))
+@click.option('--module', help="Filter by deployment module")
 @context
-def deployments_list(context, nb, page):
+def deployments_list(context, nb, page, application, env, role, revision, module):
     try:
-        deployments, max_results, total, cur_page = context.deployments.list(nb=nb, page=page)
+        deployments, max_results, total, cur_page = context.deployments.list(nb=nb, page=page, application=application, env=env, role=role, revision=revision, module=module)
     except ApiClientException as e:
         raise ClickException(e) from e
 
