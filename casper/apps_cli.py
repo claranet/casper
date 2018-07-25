@@ -37,9 +37,10 @@ def apps_list(context, nb, page, name, env, role):
             app['env'],
             app['role'],
             '{} ({})'.format(app['blue_green']['color'], 'Online' if app['blue_green']['is_online'] else 'Offline')
-            if app.get('blue_green', {}).get('enable_blue_green', False) else ''
+            if app.get('blue_green', {}).get('enable_blue_green', False) else '',
+            app.get('description', ''),
          ] for app in apps],
-        headers=['ID', 'Name', 'Environment', 'Role', 'Color']
+        headers=['ID', 'Name', 'Environment', 'Role', 'Color', 'Description']
     ))
 
 
