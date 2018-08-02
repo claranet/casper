@@ -1,6 +1,7 @@
 import click
 from click import ClickException, BadParameter, MissingParameter
 
+from casper.jobs_cli import job_log_handler
 from casper.main import cli, context
 from pyghost.api_client import ApiClientException
 from pyghost.api_client import BLUEGREEN_SWAP_STRATEGIES, BLUEGREEN_SWAP_STRATEGY_OVERLAP
