@@ -1,12 +1,11 @@
 import base64
 import click
 import re
-import requests
 import time
 import yaml
 from click import ClickException
 from tabulate import tabulate
-from .utils import regex_validate
+from .utils import regex_validate, is_dev_version
 
 from pyghost.api_client import ApiClientException, JobCommands, JobStatuses
 from casper.main import cli, context
@@ -86,8 +85,7 @@ def job_log(context, job_id, output, waitstart):
             job = context.jobs.retrieve(job_id)
             time.sleep(3)
         if job['status'] == JobStatuses.STARTED.value:
-            check_ws = requests.get('{}/socket.io/'.format(context._api_endpoint))
-            if check_ws.status_code == 200:
+            if context.jobs.check_websocket():
                 with SocketIO(context._api_endpoint, verify=False) as socketIO:
                     socketIO.emit('job_logging', {'log_id': job_id, 'last_pos': 0, 'raw_mode': True})
                     socketIO.on('job', job_handler)
@@ -99,6 +97,9 @@ def job_log(context, job_id, output, waitstart):
         elif job['status'] == JobStatuses.INIT.value:
             raise ClickException('The job has not started yet.')
         else:
+            version = context.api_version['current_revision_name']
+            if not is_dev_version(version) and parsev(version) < parsev('18.05.1'):
+                raise ClickException('Your Cloud-Deploy instance is not up-to-date, please update.')
             data = context.jobs.get_logs(job_id)
             click.echo(data, nl=False)
             if output is not None:

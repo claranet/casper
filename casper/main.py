@@ -57,6 +57,12 @@ class Context():
             self._api_endpoint = click.prompt('Cloud deploy endpoint')
         return self._api_endpoint
 
+    @property
+    def api_version(self):
+        if self._api_version is None:
+            self._api_version = ApiClient(self.api_endpoint, self.api_username, self.api_password).version()
+        return self._api_version
+
 
 context = click.make_pass_decorator(Context, ensure=True)
 

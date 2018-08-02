@@ -12,3 +12,10 @@ def regex_validate(pattern):
                 raise BadParameter('{} is not a valid value'.format(value))
         return value
     return validate
+
+def is_dev_version(version):
+	if version.startswith('GHOST-'):
+		version = 'dev'
+	if version in {'dev', 'master'}:
+		return True
+	return False
