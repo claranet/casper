@@ -8,7 +8,6 @@ from tabulate import tabulate
 from casper.main import cli, context
 from pyghost.api_client import ApiClientException
 from .utils import regex_validate
-from .utils import validate_app_schema
 
 
 @cli.group('app', help="Manage applications")
@@ -91,10 +90,10 @@ def app_create(context, filename, format):
     else:
         try:
             app = json.loads(file_content)
-        except Exception as e:
+        except Exception:
             raise ClickException('Invalid JSON file.')
     try:
-        validate_app_schema(app)
+        context.apps.validate_schema(app)
         app_id = context.apps.create(app)
         click.echo("Application creation OK - ID : {}".format(app_id))
     except Exception as e:
@@ -121,10 +120,10 @@ def app_update(context, filename, format, etag, force):
     else:
         try:
             app = json.loads(file_content)
-        except Exception as e:
+        except:
             raise ClickException('Invalid JSON file.')
     try:
-        app_id = validate_app_schema(app, True)
+        app_id = context.apps.validate_schema(app, True)
         if force:
             etag = context.apps.retrieve(app_id).get('_etag')
         app['_id'] = app_id;
