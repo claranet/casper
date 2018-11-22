@@ -6,7 +6,7 @@ import pkg_resources
 
 from click import Group
 
-from casper.ghost_api_client import AppsApiClient, JobsApiClient, DeploymentsApiClient
+from pyghost.api_client import AppsApiClient, JobsApiClient, DeploymentsApiClient
 
 version = pkg_resources.require("casper")[0].version
 
