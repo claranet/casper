@@ -8,5 +8,4 @@ pip-tools
 pytz
 pyyaml
 requests
-schema
 tabulate
