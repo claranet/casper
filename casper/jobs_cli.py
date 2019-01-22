@@ -10,6 +10,7 @@ from .utils import regex_validate, is_dev_version
 from pyghost.api_client import ApiClientException, JobCommands, JobStatuses
 from casper.main import cli, context
 
+from pkg_resources import parse_version as parsev
 from socketIO_client import SocketIO
 
 
@@ -30,7 +31,9 @@ def jobs():
 @context
 def jobs_list(context, nb, page, application, env, role, command, status, user):
     try:
-        jobs, max_results, total, cur_page = context.jobs.list(nb=nb, page=page, application=application, env=env, role=role, command=command, status=status, user=user)
+        job_list, max_results, total, cur_page = context.jobs.list(nb=nb, page=page,
+                                                                   application=application, env=env, role=role,
+                                                                   command=command, status=status, user=user)
     except ApiClientException as e:
         raise ClickException(e) from e
 
@@ -42,7 +45,7 @@ def jobs_list(context, nb, page, application, env, role, command, status, user):
         [[
             job['_id'], job['app_id']['name'] if job.get('app_id') else '',
             job['command'], job['status'], job['user'], job['_created']
-        ] for job in jobs],
+        ] for job in job_list],
         headers=['ID', 'Application name', 'Command', 'Status', 'User', 'Date']
     ))
 
@@ -69,13 +72,13 @@ def job_log(context, job_id, output, waitstart):
         if 'error' in args:
             raise ClickException(args['error'])
         if 'raw' not in args:
-            data = re.sub('<[^<]+?>', '', args['html'].replace('</div><div class="panel panel-default">', "\n")) + "\n"
+            datastr = re.sub('<[^<]+?>', '', args['html'].replace('</div><div class="panel panel-default">', "\n")) + "\n"
         else:
             try:
-                data = base64.b64decode(args['raw'])
+                datastr = base64.b64decode(args['raw'])
             except TypeError as e:
                 raise ClickException(e) from e
-        click.echo(data, nl=False)
+        click.echo(datastr, nl=False)
         if output is not None:
             output.write(data.decode('utf-8'))
 
@@ -86,7 +89,7 @@ def job_log(context, job_id, output, waitstart):
             time.sleep(3)
         if job['status'] == JobStatuses.STARTED.value:
             if context.jobs.check_websocket():
-                with SocketIO(context._api_endpoint, verify=False) as socketIO:
+                with SocketIO(context.api_endpoint, verify=False) as socketIO:
                     socketIO.emit('job_logging', {'log_id': job_id, 'last_pos': 0, 'raw_mode': True})
                     socketIO.on('job', job_handler)
                     while job['status'] == JobStatuses.STARTED.value:
@@ -105,4 +108,4 @@ def job_log(context, job_id, output, waitstart):
             if output is not None:
                 output.write(data)
     except ApiClientException as e:
-        raise ClickException(e) from e
+        raise ClickException('API Exception. Unable to retrieve Job log.') from e

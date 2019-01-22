@@ -5,18 +5,20 @@ import os
 import pkg_resources
 
 from click import Group
+from os import path
 
-from pyghost.api_client import AppsApiClient, JobsApiClient, DeploymentsApiClient
+from pyghost.api_client import ApiClient, AppsApiClient, JobsApiClient, DeploymentsApiClient
 
 version = pkg_resources.require("casper")[0].version
 
 
-class Context():
+class Context:
     def __init__(self):
         self.verbose = False
         self._api_username = None
         self._api_password = None
         self._api_endpoint = None
+        self._api_version = None
         self._apps = None
         self._deployments = None
         self._jobs = None
@@ -82,11 +84,11 @@ class NamedGroups(Group):
             if cmd is None:
                 continue
 
-            help = cmd.short_help or ''
+            help_msg = cmd.short_help or ''
             if hasattr(cmd, 'commands'):
-                group_rows.append((subcommand, help))
+                group_rows.append((subcommand, help_msg))
             else:
-                cmd_rows.append((subcommand, help))
+                cmd_rows.append((subcommand, help_msg))
 
         if group_rows:
             with formatter.section('Management Commands'):
@@ -96,14 +98,14 @@ class NamedGroups(Group):
                 formatter.write_dl(cmd_rows)
 
 
-CONFIG_FILE_PATHS = (os.path.expanduser('~/.casper'), os.path.join(os.getcwd(), '.casper'))
+CONFIG_FILE_PATHS = (path.expanduser('~/.casper'), path.join(os.getcwd(), '.casper'))
 
 
 @click.command(cls=NamedGroups)
 @click.option('--verbose', is_flag=True, help="More verbose output")
 @click.option('--profile', default="default", help="Profile name to use from config file")
 @click.option('--config-file', type=click.Path(exists=True),
-              help='Location of config file to use (defaults ".casper" and "{}/.casper")'.format(os.path.expanduser("~")))
+              help='Location of config file to use (defaults ".casper" and "{}/.casper")'.format(path.expanduser("~")))
 @click.version_option(version, '--version', '-v')
 @click.help_option('--help', '-h')
 @context
