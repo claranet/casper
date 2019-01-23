@@ -1,11 +1,10 @@
 import configparser
+import os
+from os import path
 
 import click
-import os
 import pkg_resources
-
 from click import Group
-from os import path
 
 from pyghost.api_client import ApiClient, AppsApiClient, JobsApiClient, DeploymentsApiClient
 

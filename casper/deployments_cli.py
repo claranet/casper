@@ -5,11 +5,11 @@ import pytz
 import yaml
 from click import ClickException
 from tabulate import tabulate
-from .utils import regex_validate
 
 from casper import utils
-from pyghost.api_client import ApiClientException
 from casper.main import cli, context
+from pyghost.api_client import ApiClientException
+from .utils import regex_validate
 
 
 @cli.group('deployment', help="Manage deployments")
