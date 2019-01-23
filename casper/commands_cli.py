@@ -88,7 +88,8 @@ def redeploy(context, application_id, deployment_id, strategy, safe_deploy_strat
 @click.option('--output', help="Path of output log file", type=click.File('w'))
 @click.option('--no-color', help="Remove ANSI color from output", is_flag=True)
 @context
-def executescript(context, application_id, script_file, strategy, safe_deploy_strategy, instance_ip, module_context, live_logs, output, no_color):
+def executescript(context, application_id, script_file, strategy, safe_deploy_strategy, instance_ip, module_context,
+                  live_logs, output, no_color):
     try:
         script_content = script_file.read()
         job_id = context.jobs.command_executescript(
@@ -148,7 +149,7 @@ def destroyallinstances(context, application_id, live_logs, output, no_color):
 
 
 @cli.command('recreateinstances', short_help='Create a "recreateinstances" job',
-              help="Create a job that renews all the instances for APPLICATION_ID application")
+             help="Create a job that renews all the instances for APPLICATION_ID application")
 @click.argument('application-id')
 @click.option('--strategy', type=click.Choice(ROLLING_UPDATE_STRATEGIES),
               help="Rolling-update strategy")
@@ -245,7 +246,7 @@ def swapbluegreen(context, application_id, strategy, live_logs, output, no_color
 
 
 def handle_job_creation(context, job_id, live_logs=None, output=None, no_color=None):
-  click.echo("Job creation OK - ID : {}".format(job_id))
-  if live_logs:
-    click.echo("Waiting for job logs...")
-    job_log_handler(context, job_id, output, no_color, True)
+    click.echo("Job creation OK - ID : {}".format(job_id))
+    if live_logs:
+        click.echo("Waiting for job logs...")
+        job_log_handler(context, job_id, output, no_color, True)
