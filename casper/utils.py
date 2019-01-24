@@ -1,5 +1,4 @@
 import re
-from click import BadParameter
 
 from click import BadParameter
 

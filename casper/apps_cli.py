@@ -85,19 +85,19 @@ def app_create(context, filename, format):
     if format == 'yaml':
         try:
             app = yaml.load(file_content)
-        except:
-            raise ClickException('Invalid YAML file.')
+        except Exception as e:
+            raise ClickException('Invalid YAML file.') from e
     else:
         try:
             app = json.loads(file_content)
-        except Exception:
-            raise ClickException('Invalid JSON file.')
+        except Exception as e:
+            raise ClickException('Invalid JSON file.') from e
     try:
         context.apps.validate_schema(app)
         app_id = context.apps.create(app)
         click.echo("Application creation OK - ID : {}".format(app_id))
     except Exception as e:
-        raise ClickException(e) from e
+        raise ClickException('Cannot create your application. API Exception.\n{}'.format(e)) from e
 
 
 @apps.command('update', short_help="Update an application",
@@ -110,24 +110,25 @@ def app_create(context, filename, format):
 @context
 def app_update(context, filename, format, etag, force):
     if etag is None and force is False:
-        raise BadParameter('You need specify an etag or use --force flag to fetch etag', param_hint='etag')
+        raise BadParameter('You need specify an etag or use --force flag to fetch the latest etag value',
+                           param_hint='etag')
     file_content = filename.read()
     if format == 'yaml':
         try:
             app = yaml.load(file_content)
-        except:
-            raise ClickException('Invalid YAML file.')
+        except Exception as e:
+            raise ClickException('Invalid YAML file.') from e
     else:
         try:
             app = json.loads(file_content)
-        except:
-            raise ClickException('Invalid JSON file.')
+        except Exception as e:
+            raise ClickException('Invalid JSON file.') from e
     try:
         app_id = context.apps.validate_schema(app, True)
         if force:
             etag = context.apps.retrieve(app_id).get('_etag')
-        app['_id'] = app_id;
+        app['_id'] = app_id
         result_id = context.apps.update(app, etag)
         click.echo("Application update OK - ID : {}".format(result_id))
     except Exception as e:
-        raise ClickException(e) from e
+        raise ClickException('Cannot update your application. API Exception.\n{}'.format(e)) from e
