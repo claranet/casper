@@ -5,12 +5,11 @@ import time
 import click
 import yaml
 from click import ClickException
-from pkg_resources import parse_version as parsev
 from tabulate import tabulate
 
 from casper.main import cli, context
 from pyghost.api_client import ApiClientException, JobCommands, JobStatuses
-from .utils import regex_validate, is_dev_version
+from .utils import regex_validate
 
 
 @cli.group('job', help="Manage jobs")
@@ -92,10 +91,8 @@ def job_log(context, job_id, output, waitstart):
         elif job['status'] == JobStatuses.INIT.value:
             raise ClickException('The job has not started yet.')
         else:
-            version = context.api_version['current_revision_name']
-            if not is_dev_version(version) and parsev(version) < parsev('18.05.1'):
-                raise ClickException('Your Cloud-Deploy instance is not up-to-date, please update.')
-            data = context.jobs.get_logs(job_id)
+            api_version = context.api_version['current_revision_name']
+            data = context.jobs.get_logs(job_id, api_version)
             click.echo(data, nl=False)
             if output is not None:
                 output.write(data)
