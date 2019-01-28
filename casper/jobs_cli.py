@@ -1,5 +1,3 @@
-import base64
-import re
 import time
 
 import click
@@ -69,14 +67,11 @@ def job_log(context, job_id, output, waitstart):
     def job_handler(args):
         if 'error' in args:
             raise ClickException(args['error'])
-        if 'raw' not in args:
-            datastr = re.sub('<[^<]+?>', '', args['html'].replace('</div><div class="panel panel-default">', "\n")) + "\n"
-        else:
-            try:
-                datastr = base64.b64decode(args['raw'])
-            except TypeError as e:
-                raise ClickException(e) from e
-        click.echo(datastr, nl=False)
+        try:
+            data_str = context.jobs.handle_job_data(args)
+        except TypeError as ex:
+            raise ClickException('Cannot decode Job data.') from ex
+        click.echo(data_str, nl=False)
         if output is not None:
             output.write(data.decode('utf-8'))
 
