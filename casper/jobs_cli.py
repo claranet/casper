@@ -61,36 +61,18 @@ def job_show(context, job_id):
 @jobs.command('log', help="Show the logs of a job")
 @click.argument('job-id')
 @click.option('--output', help="Path of output log file", type=click.File('w'))
-@click.option('--waitstart', help="If job is in init state, wait for start", is_flag=True)
+@click.option('--waitstart', help="Wait for job to start if applicable", is_flag=True)
 @context
 def job_log(context, job_id, output, waitstart):
-    def job_handler(args):
-        if 'error' in args:
-            raise ClickException(args['error'])
-        try:
-            data_str = context.jobs.handle_job_data(args)
-        except TypeError as ex:
-            raise ClickException('Cannot decode Job data.') from ex
-        click.echo(data_str, nl=False)
+    def success_handler(log):
+        click.echo(log, nl=False)
         if output is not None:
-            output.write(data.decode('utf-8'))
+            output.write(log.decode('utf-8'))
+
+    def exception_handler(e):
+        raise ClickException(e) from e
 
     try:
-        job = context.jobs.retrieve(job_id)
-        while waitstart and job['status'] == JobStatuses.INIT.value:
-            job = context.jobs.retrieve(job_id)
-            time.sleep(3)
-
-        if job['status'] == JobStatuses.STARTED.value:
-            context.jobs.wait_for_job_status(context.api_endpoint,
-                                             job, job_id, job_handler, JobStatuses.STARTED.value)
-        elif job['status'] == JobStatuses.INIT.value:
-            raise ClickException('The job has not started yet.')
-        else:
-            api_version = context.api_version['current_revision_name']
-            data = context.jobs.get_logs(job_id, api_version)
-            click.echo(data, nl=False)
-            if output is not None:
-                output.write(data)
+        context.jobs.get_logs_async(job_id, success_handler, exception_handler, wait_for_start=waitstart)
     except ApiClientException as e:
-        raise ClickException('API Exception. Unable to retrieve Job log.') from e
+        raise ClickException(e) from e
