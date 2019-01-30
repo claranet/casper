@@ -70,9 +70,9 @@ def job_log(context, job_id, output, waitstart):
             output.write(log.decode('utf-8'))
 
     def exception_handler(e):
-        raise ClickException(e) from e
+        raise ClickException('Error while retrieving logs: {}'.format(str(e))) from e
 
     try:
         context.jobs.get_logs_async(job_id, success_handler, exception_handler, wait_for_start=waitstart)
     except ApiClientException as e:
-        raise ClickException(e) from e
+        raise ClickException('Error while retrieving logs: {}'.format(str(e))) from e
