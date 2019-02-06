@@ -8,6 +8,7 @@
 * GHOST-523 See and download job logs
 * GHOST-529 See job logs in realtime
 * GHOST-552 Support websocket authentication
+* GHOST-640 Real time logs when launching a command
 
 ## v2.1.0
 ### features

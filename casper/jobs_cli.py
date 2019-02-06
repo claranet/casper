@@ -61,9 +61,14 @@ def job_show(context, job_id):
 @jobs.command('log', help="Show the logs of a job")
 @click.argument('job-id')
 @click.option('--output', help="Path of output log file", type=click.File('w'))
+@click.option('--no-color', help="Remove ANSI color from output", is_flag=True)
 @click.option('--waitstart', help="Wait for job to start if applicable", is_flag=True)
 @context
-def job_log(context, job_id, output, waitstart):
+def job_log(context, job_id, output, no_color, waitstart):
+    job_log_handler(context, job_id, output, no_color, waitstart)
+
+
+def job_log_handler(context, job_id, output, no_color, waitstart):
     def success_handler(log):
         click.echo(log, nl=False)
         if output is not None:
@@ -73,6 +78,6 @@ def job_log(context, job_id, output, waitstart):
         raise ClickException('Error while retrieving logs: {}'.format(str(e))) from e
 
     try:
-        context.jobs.get_logs_async(job_id, success_handler, exception_handler, wait_for_start=waitstart)
+        context.jobs.get_logs_async(job_id, success_handler, exception_handler, wait_for_start=waitstart, no_color=no_color)
     except ApiClientException as e:
         raise ClickException('Error while retrieving logs: {}'.format(str(e))) from e
