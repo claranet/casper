@@ -80,6 +80,7 @@ def job_log(context, job_id, output, waitstart):
         while waitstart and job['status'] == JobStatuses.INIT.value:
             job = context.jobs.retrieve(job_id)
             time.sleep(3)
+
         if job['status'] == JobStatuses.STARTED.value:
             context.jobs.wait_for_job_status(context.api_endpoint,
                                              job, job_id, job_handler, JobStatuses.STARTED.value)
