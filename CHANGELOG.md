@@ -5,6 +5,9 @@
 * GHOST-623 Handle application `description` field
 * GHOST-657 Uses common Pyhon SDK Client
 * GHOST-603 Implement deployments and jobs filtering
+* GHOST-523 See and download job logs
+* GHOST-529 See job logs in realtime
+* GHOST-552 Support websocket authentication
 
 ## v2.1.0
 ### features

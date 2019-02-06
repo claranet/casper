@@ -1,11 +1,13 @@
+import time
+
 import click
 import yaml
 from click import ClickException
 from tabulate import tabulate
-from .utils import regex_validate
 
-from pyghost.api_client import ApiClientException, JobCommands, JobStatuses
 from casper.main import cli, context
+from pyghost.api_client import ApiClientException, JobCommands, JobStatuses
+from .utils import regex_validate
 
 
 @cli.group('job', help="Manage jobs")
@@ -25,7 +27,9 @@ def jobs():
 @context
 def jobs_list(context, nb, page, application, env, role, command, status, user):
     try:
-        jobs, max_results, total, cur_page = context.jobs.list(nb=nb, page=page, application=application, env=env, role=role, command=command, status=status, user=user)
+        job_list, max_results, total, cur_page = context.jobs.list(nb=nb, page=page,
+                                                                   application=application, env=env, role=role,
+                                                                   command=command, status=status, user=user)
     except ApiClientException as e:
         raise ClickException(e) from e
 
@@ -37,7 +41,7 @@ def jobs_list(context, nb, page, application, env, role, command, status, user):
         [[
             job['_id'], job['app_id']['name'] if job.get('app_id') else '',
             job['command'], job['status'], job['user'], job['_created']
-        ] for job in jobs],
+        ] for job in job_list],
         headers=['ID', 'Application name', 'Command', 'Status', 'User', 'Date']
     ))
 
@@ -52,3 +56,23 @@ def job_show(context, job_id):
         raise ClickException(e) from e
 
     click.echo(yaml.safe_dump(app, indent=4, allow_unicode=True, default_flow_style=False))
+
+
+@jobs.command('log', help="Show the logs of a job")
+@click.argument('job-id')
+@click.option('--output', help="Path of output log file", type=click.File('w'))
+@click.option('--waitstart', help="Wait for job to start if applicable", is_flag=True)
+@context
+def job_log(context, job_id, output, waitstart):
+    def success_handler(log):
+        click.echo(log, nl=False)
+        if output is not None:
+            output.write(log.decode('utf-8'))
+
+    def exception_handler(e):
+        raise ClickException('Error while retrieving logs: {}'.format(str(e))) from e
+
+    try:
+        context.jobs.get_logs_async(job_id, success_handler, exception_handler, wait_for_start=waitstart)
+    except ApiClientException as e:
+        raise ClickException('Error while retrieving logs: {}'.format(str(e))) from e
