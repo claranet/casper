@@ -110,7 +110,7 @@ def app_create(context, filename, format):
 @context
 def app_update(context, filename, format, etag, force):
     if etag is None and force is False:
-        raise BadParameter('You need specify an etag or use --force flag to fetch the latest etag value',
+        raise BadParameter('You need to specify an etag or use --force flag to force the update without document version verification',
                            param_hint='etag')
     file_content = filename.read()
     if format == 'yaml':
