@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
--e git+https://github.com/claranet/cloud-deploy-sdk-python@v0.1#egg=pyghost
+-e git+https://github.com/claranet/cloud-deploy-sdk-python@v0.2#egg=pyghost
 certifi==2018.11.29       # via requests
 chardet==3.0.4            # via requests
 click==7.0

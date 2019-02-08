@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased
-### features
+### v2.2.0
 * GHOST-623 Handle application `description` field
 * GHOST-657 Uses common Pyhon SDK Client
 * GHOST-603 Implement deployments and jobs filtering

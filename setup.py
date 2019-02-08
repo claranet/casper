@@ -4,7 +4,7 @@ except ImportError: # for pip <= 9.0.3
     from pip.req import parse_requirements
 from setuptools import setup, find_packages
 
-CURRENT_VERSION = "v2.1.0"
+CURRENT_VERSION = "v2.2.0"
 
 setup(
     name='casper',
