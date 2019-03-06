@@ -72,10 +72,10 @@ def job_log_handler(context, job_id, output, no_color, waitstart):
         if output is not None:
             output.write(log.decode('utf-8'))
 
-    def exception_handler(e):
-        raise ClickException('Error while retrieving logs: {}'.format(str(e))) from e
+    def exception_handler(ex):
+        raise ClickException('Error while retrieving logs: {}'.format(ex)) from ex
 
     try:
         context.jobs.get_logs_async(job_id, success_handler, exception_handler, wait_for_start=waitstart, no_color=no_color)
     except ApiClientException as e:
-        raise ClickException('Error while retrieving logs: {}'.format(str(e))) from e
+        raise ClickException('Error while retrieving logs: {}'.format(e)) from e
