@@ -1,7 +1,13 @@
 # Changelog
 
 ## Unreleased
-### v2.2.0
+## v2.2.1
+### bugfixes
+* GHOST-706/707: Fix job log command with `--no-color` flag may fail
+* GHOST-630/711: Update pip dependencies and use PEP 508 custom url format (needed to be compatible with pip >= 19.0)
+
+## v2.2.0
+### features
 * GHOST-623 Handle application `description` field
 * GHOST-657 Uses common Pyhon SDK Client
 * GHOST-603 Implement deployments and jobs filtering
