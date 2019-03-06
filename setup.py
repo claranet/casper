@@ -4,7 +4,7 @@ except ImportError: # for pip <= 9.0.3
     from pip.req import parse_requirements
 from setuptools import setup, find_packages
 
-CURRENT_VERSION = "v2.2.0"
+CURRENT_VERSION = "v2.2.1"
 
 setup(
     name='casper',
@@ -13,9 +13,8 @@ setup(
     python_requires='>=3.4',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=[str(ir.req) for ir in parse_requirements('requirements.txt', session='hack')],
-    # https://github.com/pypa/pip/issues/4187.
-    dependency_links=[str(ir.link) + '-0' for ir in parse_requirements('requirements.txt', session='hack') if ir.link],
+    install_requires=["{} @ {}".format(ir.req, ir.link) if ir.link else str(ir.req)
+                      for ir in parse_requirements('requirements.txt', session='hack')],
     entry_points={
         'console_scripts': [
             'casper=casper.main:cli',
