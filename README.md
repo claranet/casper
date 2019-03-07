@@ -9,14 +9,14 @@ Cloud Deploy documentation is available here: [https://docs.cloudeploy.io](https
 Requirements
 ------------
 
-* Python 3.4+
+* Python 3.5+
 
 Installation
 ------------
 With [pip](https://pip.pypa.io) (in a [virtualenv](https://virtualenv.pypa.io) or not)
 
 ```
-pip install git+https://github.com/claranet/casper --process-dependency-links
+pip install git+https://github.com/claranet/casper
 ```
 
 Usage
